@@ -138,3 +138,6 @@ python -V # check version to see that it took
 ## Running a Python Script on boot
 
 <http://raspberrypi.stackexchange.com/questions/4123/running-a-python-script-at-startup>
+
+## Blocking Amazon Dash Phone Notifications
+
