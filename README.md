@@ -141,3 +141,4 @@ python -V # check version to see that it took
 
 ## Blocking Amazon Dash Phone Notifications
 
+You'll probably receive annoying notifications on your phone asking you to complete the setup process. To prevent these notifications, you'll need to block the Amazon Dash Button from reaching the internet by tweaking your router settings.
