@@ -75,9 +75,36 @@ sudo make install
 python -V # check version to see that it took
 ```
 
-## Running a Python Script on boot
+## Running a Python Script on-boot with a cron job
 
-<http://raspberrypi.stackexchange.com/questions/4123/running-a-python-script-at-startup>
+Source: [Running A Python Script At Boot Using Cron](http://www.raspberrypi-spy.co.uk/2013/07/running-a-python-script-at-boot-using-cron/)
+
+### Install Crontab on OSMC
+
+```sh
+sudo apt-get update
+sudo apt-get install cron
+```
+
+### Edit root's crontab
+
+```sh
+sudo crontab -e
+```
+
+Add this to the end of it (no need for sudo since it's already root's crontab): `@reboot python /home/osmc/scripts/habits.py &`
+
+### Check that root is actually running the script
+
+```sh
+ps aux | grep /home/osmc/scripts/habits.py
+```
+
+Look for `root       252 10.9  2.3  20260 18008 ?        S    16:08   0:03 python /home/osmc/scripts/habits.py`
+
+If you need to kill the script/job, run `sudo kill 252`
+
+[Other options](http://raspberrypi.stackexchange.com/questions/4123/running-a-python-script-at-startup)
 
 ## Blocking Amazon Dash Phone Notifications
 
