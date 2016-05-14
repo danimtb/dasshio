@@ -8,7 +8,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 from scapy.all import *
 
-AMAZON_DASH_MAC_ADDRESS = 'YOUR_DASH_MAC_ADDY_HERE';
+AMAZON_DASH_MAC_ADDRESS = 'YOUR_DASH_MAC_ADDY_HERE';  # Make sure letters in the address are lower-case
 GDOCS_OAUTH_JSON       = 'google-sheets-creds.json'
 GDOCS_SPREADSHEET_NAME = 'YOUR_SPREADSHEET_NAME'
 # How long to wait (in seconds) between measurements.
