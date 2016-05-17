@@ -10,7 +10,7 @@ Sources & Inspiration:
 
 ## Why Use the Raspberry Pi?
 
-The Amazon Dash Button hack typically works using a python script that listens for the button's [ARP Probe](https://en.wikipedia.org/wiki/Address_Resolution_Protocol#ARP_probe). If you want to use the button long-term, you'll want to script to auto-start and be running constantly, and since I'm a techno-hippie, I'd like to use as little power as possible. Enter, the Raspberry Pi, which only uses 2-5 Watts.
+The Amazon Dash Button hack typically works by using a Python script that listens for the button's [ARP Probe](https://en.wikipedia.org/wiki/Address_Resolution_Protocol#ARP_probe). Most tutorials just cover running the script and capturing a few button presses, but what if you don't want to leave your main desktop or laptop on 24/7 just to listen for button presses? If you want to use the button long-term, you'll want the listener script to auto-start and run constantly, and it'd also be a plus to use as little power as possible. That's why I prefer using the Raspberry Pi, which only uses 2-5 Watts.
 
 ## Stuff to install on Raspberry Pi's Debian
 
