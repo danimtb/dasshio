@@ -1,0 +1,4 @@
+daemonize==2.4.7
+netifaces==0.10.5
+requests==2.12.3
+scapy-python3==0.20
