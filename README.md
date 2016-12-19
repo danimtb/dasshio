@@ -16,6 +16,13 @@ pip install -r requirements.txt
 ```
 Now you have everything you need to run this daemon. Some changes in `config.json` (compatible with [Maddox Dasher config](https://github.com/maddox/dasher)) should do the rest.
 
+## Test setup
+Test your workflow with the `find_button.py` sniffing script.
+```sh
+source .venv/bin/activate
+python find_button.py
+```
+
 ## Run the daemon
 
 ```sh

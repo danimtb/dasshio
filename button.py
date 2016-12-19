@@ -28,7 +28,7 @@ def arp_display(pkt):
         logging.info('status code: {}'.format(r.status_code))
 
 def main():
-    sniff(prn=arp_display, iface='en0', filter='arp', store=0, count=0)
+    sniff(prn=arp_display, filter='arp', store=0, count=0)
 
 # create basepath
 path = os.path.dirname(os.path.realpath(__file__))
