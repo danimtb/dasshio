@@ -16,6 +16,18 @@ pip install -r requirements.txt
 ```
 Now you have everything you need to run this daemon. Some changes in `config.json` (compatible with [Maddox Dasher config](https://github.com/maddox/dasher)) should do the rest.
 
+More requirements:
+```sh
+# macOS
+brew install libnet
+
+# linux
+apt install libnet
+
+# FreeBSD
+pkg install libnet
+```
+
 ## Test setup
 Test your workflow with the `find_button.py` sniffing script.
 ```sh
