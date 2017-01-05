@@ -7,7 +7,8 @@ from scapy.all import ARP
 
 
 def arp_display(pkt):
-    print(pkt[ARP].hwsrc)
+    if pkt[ARP].psrc == '0.0.0.0':
+        print(pkt[ARP].hwsrc)
 
 # start sniffing
 print('Happy sniffing! MAC addresses:')
