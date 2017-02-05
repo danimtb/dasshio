@@ -4,13 +4,28 @@
 ## Installation
 
 ```sh
-docker run -d --name="dashbutton" -v $(pwd)/config.example.json:/app/config.json juka/amazon-dashbutton
+docker run -d --name="dashbutton" --net=host -v $(pwd)/config.example.json:/app/config.json juka/amazon-dashbutton
 ```
 
-## Test setup
-Test your workflow with the `find_button.py` sniffing script.
+## Find MAC addresses of dashbuttons
+Run this command, to sniff buttons in your network:
+
 ```sh
 docker exec -it dashbutton python find_button.py
+```
+
+## Compose example
+Edit your local `config.json` file and generate a `docker-compose.yaml`, e.g.:
+
+```
+version: "2"
+services:
+  dashbutton:
+    container_name: dashbutton
+    image: juka/amazon-dashbutton:latest
+    restart: always
+    volumes:
+      - ./config.json:/app/config.json
 ```
 
 # Sources & Inspiration:
