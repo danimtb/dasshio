@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM armhf/python:3.6
 MAINTAINER Julian Kahnert <mail@juliankahnert.de>
 
 VOLUME /app
