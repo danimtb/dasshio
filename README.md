@@ -11,14 +11,14 @@ cd amazon-dashbutton
 git checkout docker-rpi
 
 # build image
-docker build .
+sudo docker build .
 ```
 
 Edit your local `config.json` file ([example](https://github.com/JulianKahnert/amazon-dashbutton/blob/master/config.example.json)) and start container:
 
 ```sh
 # start container
-docker run -d --name="dashbutton" --net=host -v $(pwd)/config.json:/app/config.json CHANGE-THIS-TO-CONTAINER-ID
+sudo docker run -d --name="dashbutton" --privileged --net=host -v $(pwd)/config.json:/app/config.json CHANGE-THIS-TO-CONTAINER-ID
 ```
 
 ## Find MAC addresses of dashbuttons
