@@ -2,6 +2,7 @@
 
 
 ## Installation
+Generate your own `config.json` file ([example](https://github.com/JulianKahnert/amazon-dashbutton/blob/master/config.example.json)) and run this command afterwards:
 
 ```sh
 # get repository
@@ -37,6 +38,7 @@ services:
     container_name: dashbutton
     build: .
     restart: always
+    network_mode: "host"
     volumes:
       - ./config.json:/app/config.json
 ```
