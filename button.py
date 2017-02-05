@@ -10,12 +10,12 @@
 
 import json
 import logging
-from daemonize import Daemonize
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 from scapy.all import sniff
 from scapy.all import ARP
 import requests
 import os
+
 
 def arp_display(pkt):
     mac = pkt[ARP].hwsrc
@@ -27,8 +27,6 @@ def arp_display(pkt):
         r = requests.post(button['url'], json=button['body'], headers=button['headers'])
         logging.info('status code: {}'.format(r.status_code))
 
-def main():
-    sniff(prn=arp_display, filter='arp', store=0, count=0)
 
 # create basepath
 path = os.path.dirname(os.path.realpath(__file__))
@@ -44,8 +42,4 @@ with open(path + '/config.json', mode='r') as data_file:
     config = json.load(data_file)
 
 # start sniffing
-daemon = Daemonize(
-    app='dashbutton',
-    pid='{}/button.pid'.format(path),
-    action=main)
-daemon.start()
+sniff(prn=arp_display, filter='arp', store=0, count=0)
