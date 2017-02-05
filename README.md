@@ -4,7 +4,20 @@
 ## Installation
 
 ```sh
-docker run -d --name="dashbutton" --net=host -v $(pwd)/config.example.json:/app/config.json juka/amazon-dashbutton
+# get repository
+git clone https://github.com/JulianKahnert/amazon-dashbutton.git
+cd amazon-dashbutton
+git checkout docker-rpi
+
+# build image
+docker build .
+```
+
+Edit your local `config.json` file and start container:
+
+```sh
+# start container
+docker run -d --name="dashbutton" --net=host -v $(pwd)/config.json:/app/config.json CHANGE-THIS-TO-CONTAINER-ID
 ```
 
 ## Find MAC addresses of dashbuttons
@@ -22,7 +35,7 @@ version: "2"
 services:
   dashbutton:
     container_name: dashbutton
-    image: juka/amazon-dashbutton:latest
+    build: .
     restart: always
     volumes:
       - ./config.json:/app/config.json
