@@ -5,7 +5,7 @@
 Generate your own `config.json` file ([example](https://github.com/JulianKahnert/amazon-dashbutton/blob/master/config.example.json)) and run this command afterwards:
 
 ```sh
-docker run -d --name="dashbutton" --net=host -v $(pwd)/config.json:/app/config.json juka/amazon-dashbutton
+docker run -d --name="dashbutton" --privileged --net=host -v $(pwd)/config.json:/app/config.json juka/amazon-dashbutton
 ```
 
 ## Find MAC addresses of dashbuttons
@@ -25,7 +25,8 @@ services:
     container_name: dashbutton
     image: juka/amazon-dashbutton:latest
     restart: always
-    network_mode: "host"
+    network_mode: host
+    privileged: true
     volumes:
       - ./config.json:/app/config.json
 ```
