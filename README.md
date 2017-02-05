@@ -25,6 +25,7 @@ services:
     container_name: dashbutton
     image: juka/amazon-dashbutton:latest
     restart: always
+    network_mode: "host"
     volumes:
       - ./config.json:/app/config.json
 ```
