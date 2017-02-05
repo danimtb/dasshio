@@ -13,7 +13,7 @@ git checkout docker-rpi
 docker build .
 ```
 
-Edit your local `config.json` file and start container:
+Edit your local `config.json` file ([example](https://github.com/JulianKahnert/amazon-dashbutton/blob/master/config.example.json)) and start container:
 
 ```sh
 # start container
@@ -28,7 +28,7 @@ docker exec -it dashbutton python find_button.py
 ```
 
 ## Compose example
-Edit your local `config.json` file and generate a `docker-compose.yaml`, e.g.:
+Edit your local `config.json` file ([example](https://github.com/JulianKahnert/amazon-dashbutton/blob/master/config.example.json)) and generate a `docker-compose.yaml`, e.g.:
 
 ```
 version: "2"
