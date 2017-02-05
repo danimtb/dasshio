@@ -2,9 +2,10 @@
 
 
 ## Installation
+Generate your own `config.json` file ([example](https://github.com/JulianKahnert/amazon-dashbutton/blob/master/config.example.json)) and run this command afterwards:
 
 ```sh
-docker run -d --name="dashbutton" --net=host -v $(pwd)/config.example.json:/app/config.json juka/amazon-dashbutton
+docker run -d --name="dashbutton" --net=host -v $(pwd)/config.json:/app/config.json juka/amazon-dashbutton
 ```
 
 ## Find MAC addresses of dashbuttons
@@ -15,7 +16,7 @@ docker exec -it dashbutton python find_button.py
 ```
 
 ## Compose example
-Edit your local `config.json` file and generate a `docker-compose.yaml`, e.g.:
+Edit your local `config.json` file ([example](https://github.com/JulianKahnert/amazon-dashbutton/blob/master/config.example.json)) and generate a `docker-compose.yaml`, e.g.:
 
 ```
 version: "2"
