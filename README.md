@@ -39,6 +39,7 @@ services:
     build: .
     restart: always
     network_mode: "host"
+    privileged: true
     volumes:
       - ./config.json:/app/config.json
 ```
