@@ -38,7 +38,7 @@ services:
     container_name: dashbutton
     build: .
     restart: always
-    network_mode: "host"
+    network_mode: host
     privileged: true
     volumes:
       - ./config.json:/app/config.json

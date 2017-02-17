@@ -2,7 +2,7 @@
 
 # http://www.raspberrypi-spy.co.uk/2013/07/running-a-python-script-at-boot-using-cron/
 # crontab -e
-# @reboot   source /PATH/TO/REPO/.venv/bin/activate && python /PATH/TO/REPO/button.py
+# @reboot   python /PATH/TO/REPO/button.py
 
 # Exit daemon:
 # find number: ps aux | grep "button.py"
