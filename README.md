@@ -22,7 +22,7 @@ More requirements:
 brew install libnet
 
 # linux
-apt install libnet
+apt install libnet1-dev
 
 # FreeBSD
 pkg install libnet
