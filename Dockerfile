@@ -1,17 +1,15 @@
-FROM armhf/python:3.6
-MAINTAINER Julian Kahnert <mail@juliankahnert.de>
+FROM %%BASE_IMAGE%%
 
-VOLUME /app
-WORKDIR /app
-COPY . .
+ENV LANG C.UTF-8
 
-# install dependencies
-RUN apt-get update
-RUN apt-get install -y \
-    gcc \
-    libnet1 \
-    tcpdump
+# Setup
+RUN apk add --no-cache python3 \
+    && pip3 install --no-cache --upgrade pip
 
 RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copy data for add-on
+COPY button.py /
+COPY find_button.py /etc/
 
 CMD ["python3", "button.py"]
