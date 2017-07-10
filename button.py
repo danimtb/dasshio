@@ -41,7 +41,7 @@ stdoutHandler = logging.StreamHandler(sys.stdout)
 stdoutHandler.setFormatter(format)
 logger.addHandler(stdoutHandler)
 
-fileHandler = logging.FileHandler(path + '/button.log', 'w')
+fileHandler = logging.FileHandler(path + '/dasshio.log', 'w')
 fileHandler.setFormatter(format)
 logger.addHandler(fileHandler)
 
