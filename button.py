@@ -46,7 +46,7 @@ fileHandler.setFormatter(format)
 logger.addHandler(fileHandler)
 
 # read config file
-with open(path + '/config.json', mode='r') as data_file:
+with open(path + '/data/options.json', mode='r') as data_file:
     config = json.load(data_file)
 
 # start sniffing
