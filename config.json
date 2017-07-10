@@ -23,8 +23,6 @@
         "name": "str",
         "address": "str",
         "url": "str",
-        "headers": {"x-ha-access": "str"},
-        "body": {"entity_id": "str"}
       }
     ]
   }
