@@ -3,7 +3,7 @@ FROM %%BASE_IMAGE%%
 ENV LANG C.UTF-8
 
 # Setup
-RUN apk add --no-cache python3-dev gcc \
+RUN apk add --no-cache python3-dev gcc musl-dev \
     && pip3 install --no-cache --upgrade pip
 RUN ["/usr/bin/pip3", "install", "-r", "requirements.txt"]
 
