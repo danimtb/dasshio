@@ -31,11 +31,19 @@ def arp_display(pkt):
 # create basepath
 path = os.path.dirname(os.path.realpath(__file__))
 
-# log events in log file
+# log events in stdout and log file
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.propagate = False
-fh = logging.FileHandler(path + '/button.log', 'w')
+format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+stdoutHandler = logging.StreamHandler(sys.stdout)
+stdoutHandler.setFormatter(format)
+logger.addHandler(stdoutHandler)
+
+fileHandler = logging.FileHandler(path + '/button.log', 'w')
+fileHandler.setFormatter(format)
+logger.addHandler(fileHandler)
 
 # read config file
 with open(path + '/config.json', mode='r') as data_file:
