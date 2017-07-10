@@ -12,8 +12,8 @@
         "name": "Your button name",
         "address": "null",
         "url": "null",
-        "headers": {"x-ha-access": "your_password"},
-        "body": {"entity_id": "your_entity_id"}
+        "headers": "",
+        "body": ""
       }
     ]
   },
@@ -23,6 +23,8 @@
         "name": "str",
         "address": "str",
         "url": "str",
+        "headers": "str",
+        "body": "str"
       }
     ]
   }
