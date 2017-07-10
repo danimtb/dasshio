@@ -2,10 +2,11 @@
 
 import json
 import logging
+import os
+import requests
 from scapy.all import sniff
 from scapy.all import ARP
-import requests
-import os
+import sys
 
 
 def arp_display(pkt):
