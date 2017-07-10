@@ -5,6 +5,7 @@ ENV LANG C.UTF-8
 # Setup
 RUN apk add --no-cache python3 \
     && pip3 install --no-cache --upgrade pip
+COPY requirements.txt /requirements.txt
 RUN ["/usr/bin/pip3", "install", "-r", "/requirements.txt"]
 
 # Copy data for add-on
