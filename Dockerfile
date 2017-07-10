@@ -9,7 +9,7 @@ RUN apk add --no-cache python3 \
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy data for add-on
-COPY button.py /
+COPY dasshio.py /
 COPY find_button.py /etc/
 
-CMD ["python3", "button.py"]
+CMD ["python3", "dasshio.py"]
