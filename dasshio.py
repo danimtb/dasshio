@@ -10,12 +10,14 @@ import sys
 
 
 def arp_display(pkt):
-    mac = pkt[ARP].hwsrc
-    if mac in [button['address'] for button in config['buttons']]:
-        idx = [button['address'] for button in config['buttons']].index(mac)
+    mac = pkt[ARP].hwsrc.lower()
+    if mac in [button['address'].lower() for button in config['buttons']]:
+        idx = [button['address'].lower() for button in config['buttons']].index(mac)
         button = config['buttons'][idx]
 
         logging.info(button['name'])
+        print(button['name'], mac, "pressed!")
+        print("REQUEST!!!", button['url'])
         r = requests.post(button['url'], json=button['body'], headers=button['headers'])
         logging.info('Status Code: {}'.format(r.status_code))
 
@@ -38,8 +40,10 @@ fileHandler.setFormatter(format)
 logger.addHandler(fileHandler)
 
 # read config file
+print("Opening json file...")
 with open(path + '/data/options.json', mode='r') as data_file:
     config = json.load(data_file)
 
 # start sniffing
+print("Starting sniffing...")
 sniff(prn=arp_display, filter='arp', store=0, count=0)
