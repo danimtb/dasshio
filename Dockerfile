@@ -5,7 +5,8 @@ ENV LANG C.UTF-8
 # Setup
 RUN apk add --no-cache python3 python3-dev gcc linux-headers musl-dev \
     && pip3 install --no-cache --upgrade pip
-CMD ["pip3", "install", "-r", "requirements.txt"]
+COPY requirements.txt /tmp/
+RUN pip3 install --requirement /tmp/requirements.txt
 
 # Copy data for add-on
 COPY dasshio.py /
