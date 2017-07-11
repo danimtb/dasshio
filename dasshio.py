@@ -18,7 +18,7 @@ def arp_display(pkt):
         logging.info(button['name'])
         print(button['name'], mac, "pressed!")
         print("REQUEST!!!", button['url'])
-        r = requests.post(button['url'], json=button['body'], headers=button['headers'])
+        r = requests.post(button['url'], json=json.loads(button['body']), headers=json.loads(button['headers']))
         logging.info('Status Code: {}'.format(r.status_code))
 
 
