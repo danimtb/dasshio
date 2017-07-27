@@ -15,35 +15,34 @@ def arp_display(pkt):
         idx = [button['address'].lower() for button in config['buttons']].index(mac)
         button = config['buttons'][idx]
 
-        logging.info(button['name'])
-        print(button['name'], mac, "pressed!")
-        print("REQUEST!!!", button['url'])
+        logging.info(button['name'] + " button pressed!")
+        logging.info("Request: " + button['url'])
         r = requests.post(button['url'], json=json.loads(button['body']), headers=json.loads(button['headers']))
         logging.info('Status Code: {}'.format(r.status_code))
 
 
-# create basepath
+# Create basepath
 path = os.path.dirname(os.path.realpath(__file__))
 
-# log events in stdout and log file
-logger = logging.getLogger(__name__)
+# Log events to stdout
+logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-logger.propagate = False
-format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 stdoutHandler = logging.StreamHandler(sys.stdout)
-stdoutHandler.setFormatter(format)
+stdoutHandler.setLevel(logging.INFO)
+
+formater = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+stdoutHandler.setFormatter(formater)
+
 logger.addHandler(stdoutHandler)
 
-fileHandler = logging.FileHandler(path + '/dasshio.log', 'w')
-fileHandler.setFormatter(format)
-logger.addHandler(fileHandler)
 
-# read config file
-print("Opening json file...")
+# Read config file
+logging.info("Reading config file: /data/options.json")
+
 with open(path + '/data/options.json', mode='r') as data_file:
     config = json.load(data_file)
 
-# start sniffing
-print("Starting sniffing...")
+# Start sniffing
+logging.info("Starting sniffing...")
 sniff(prn=arp_display, filter='arp', store=0, count=0)
