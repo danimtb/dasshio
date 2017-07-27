@@ -10,6 +10,7 @@ import sys
 
 
 def arp_display(pkt):
+    logging.info("Sniffing...")
     mac = pkt[ARP].hwsrc.lower()
     if mac in [button['address'].lower() for button in config['buttons']]:
         idx = [button['address'].lower() for button in config['buttons']].index(mac)
