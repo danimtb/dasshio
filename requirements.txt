@@ -1,3 +1,0 @@
-netifaces
-requests
-scapy-python3
