@@ -6,7 +6,7 @@
   "url": "https://github.com/danimtb/dasshio",
   "startup": "before",
   "boot": "auto",
-  "host_network": "True"
+  "host_network": "True",
   "options": {
     "buttons": [
       {
