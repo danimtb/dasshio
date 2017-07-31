@@ -18,8 +18,17 @@ def arp_display(pkt):
 
         logging.info(button['name'] + " button pressed!")
         logging.info("Request: " + button['url'])
-        r = requests.post(button['url'], json=json.loads(button['body']), headers=json.loads(button['headers']))
-        logging.info('Status Code: {}'.format(r.status_code))
+        
+        try:
+            request = requests.post(button['url'], json=json.loads(button['body']), headers=json.loads(button['headers']))
+            logging.info('Status Code: {}'.format(request.status_code))
+            
+            if request.status_code == requests.codes.ok:
+                logging.info("Successful request")
+            else:
+                logging.error("Bad request")
+        except:
+            logging.exception("Unable to perform  request: Check url, body and headers format. Check API password")
 
 
 # Create basepath
