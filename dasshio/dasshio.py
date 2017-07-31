@@ -7,10 +7,10 @@ import requests
 from scapy.all import sniff
 from scapy.all import ARP
 import sys
+import time
 
 
 def arp_display(pkt):
-    logging.info("Sniffing...")
     mac = pkt[ARP].hwsrc.lower()
     if mac in [button['address'].lower() for button in config['buttons']]:
         idx = [button['address'].lower() for button in config['buttons']].index(mac)
@@ -25,6 +25,7 @@ def arp_display(pkt):
             
             if request.status_code == requests.codes.ok:
                 logging.info("Successful request")
+                time.sleep(5) # Wait 5 seconds to let dash button disconnect from wifi before scanning again
             else:
                 logging.error("Bad request")
         except:
