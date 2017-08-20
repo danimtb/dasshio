@@ -1,9 +1,9 @@
-# Dasshio - Amazon Dash Buttons hassio addon
+# Dasshio - Amazon Dash Buttons Hass.io add-on
 
 [Hass.io add-on](https://home-assistant.io/addons/) to easily use [Amazon Dash Buttons](https://en.wikipedia.org/wiki/Amazon_Dash) with [Home Assistant](https://home-assistant.io).
 
 ## Description: How dasshio works
-This is a python script used to scan wifi devices connected to your network  (using ARP). If a device matches any MAC address of the options, it will pereform a HTTP POST request to the url given with headers and body indicated.
+This is a python script used to scan wifi devices connected to your network  (using ARP). If a device matches any MAC address of the options, it will perform a HTTP POST request to the url given with headers and body indicated.
 
 ## Usage
 You can use this add-on to do whatever you like following the description above. However, the purpose of dasshio is to "integrate" [Amazon's Dash buttons](https://en.wikipedia.org/wiki/Amazon_Dash) in Home Assistant in an easy way with [Hass.io.](https://home-assistant.io/hassio/).
@@ -22,14 +22,11 @@ Examples:
  Have a look at [Service calls](https://home-assistant.io/docs/scripts/service-calls/) to know what services you can use and what you can do with them.
 
 
-
 ## How to install this Hass.io add-on
-
-To install this add-on, please, follow Home Assistant documentation on how to install 3rd party addons: https://home-assistant.io/hassio/installing_third_party_addons/﻿
+To install this add-on, please, follow Home Assistant documentation on how to [Install Third-party Add-ons](https://home-assistant.io/hassio/installing_third_party_addons/)
 
 ## Options example
-
-Here it is an example of a Dash Gillette used to toggle a light. Note you can add more buttons inside the "buttons" array.
+Here it is an example of a Dash Gillette used to toggle a light. Note you can add as many buttons as you like inside the "buttons" array.
 
  - name: name of your device
  - address: MAC of tour device
@@ -45,14 +42,23 @@ Here it is an example of a Dash Gillette used to toggle a light. Note you can ad
     "name": "Gillette",
     "address": "AC:63:BE:77:C4:0D",
     "url": "http://home_assistant_IP:8123/api/services/light/toggle",
-    "headers": {"x-ha-access": "your_password"},
-    "body": {"entity_id": "light.room_light"}
+    "headers": "{\"x-ha-access\": \"your_password\"},
+    "body": "{\"entity_id\": \"light.room_light\"}"
+  },
+  {
+    "name": "Bounty",
+    "address": "AC:63:BE:77:C4:0C",
+    "url": "http://home_assistant_IP:8123/api/services/script/welcome_home",
+    "headers": "{\"x-ha-access\": \"your_password\"},
+    "body": ""
   }]
 }
 ```
 
+**WARNING**: As headers and body sections have to be strings, it is necessary to use slashes ( */* ) berore double quotes ( *"* ) to escape them. Like this:  *\"*
+
 ## How to find the MAC address of your Dash
-TO-DO
+At the moment, the best way to do this is to access your Wifi Router and check the MAC addresses of the historial of connected devices. Then, copy and paste the MAC in a service like [MA:CV:en:do:rs](https://macvendors.com/) to find the Vendor of that device. The Amazon Dash button vendor should be: *Amazon Technologies Inc.*
 
 ---------------------
 ### Credit
