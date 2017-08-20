@@ -42,15 +42,15 @@ Here it is an example of a Dash Gillette used to toggle a light. Note you can ad
     "name": "Gillette",
     "address": "AC:63:BE:77:C4:0D",
     "url": "http://home_assistant_IP:8123/api/services/light/toggle",
-    "headers": "{\"x-ha-access\": \"your_password\"},
+    "headers": "{\"x-ha-access\": \"your_password\"}",
     "body": "{\"entity_id\": \"light.room_light\"}"
   },
   {
     "name": "Bounty",
     "address": "AC:63:BE:77:C4:0C",
-    "url": "http://home_assistant_IP:8123/api/services/script/welcome_home",
-    "headers": "{\"x-ha-access\": \"your_password\"},
-    "body": ""
+    "url": "https://home_assistant_url.duckdns.org/api/services/script/welcome_home",
+    "headers": "{}",
+    "body": "{}"
   }]
 }
 ```

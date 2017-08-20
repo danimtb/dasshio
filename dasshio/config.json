@@ -13,8 +13,8 @@
         "name": "null",
         "address": "null",
         "url": "null",
-        "headers": "",
-        "body": ""
+        "headers": "{}",
+        "body": "{}"
       }
     ]
   },
