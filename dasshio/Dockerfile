@@ -10,6 +10,5 @@ RUN pip3 install --requirement /tmp/requirements.txt
 
 # Copy data for add-on
 COPY dasshio.py /
-COPY find_button.py /etc/
 
 CMD ["python3", "dasshio.py"]
