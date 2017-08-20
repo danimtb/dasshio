@@ -55,7 +55,7 @@ Here it is an example of a Dash Gillette used to toggle a light. Note you can ad
 }
 ```
 
-**WARNING**: As headers and body sections have to be strings, it is necessary to use slashes ( */* ) berore double quotes ( *"* ) to escape them. Like this:  *\"*
+**WARNING**: As headers and body sections have to be strings, it is necessary to use slashes ( */* ) berore double quotes ( *"* ) to escape them. Like this:  *\\"*
 
 ## How to find the MAC address of your Dash
 At the moment, the best way to do this is to access your Wifi Router and check the MAC addresses of the historial of connected devices. Then, copy and paste the MAC in a service like [MA:CV:en:do:rs](https://macvendors.com/) to find the Vendor of that device. The Amazon Dash button vendor should be: *Amazon Technologies Inc.*
