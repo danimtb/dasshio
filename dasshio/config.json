@@ -13,8 +13,8 @@
         "name": "null",
         "address": "null",
         "url": "null",
-        "headers": "",
-        "body": ""
+        "headers": {},
+        "body": {}
       }
     ]
   },
@@ -23,9 +23,7 @@
       {
         "name": "str",
         "address": "str",
-        "url": "str",
-        "headers": "str",
-        "body": "str"
+        "url": "str"
       }
     ]
   }
