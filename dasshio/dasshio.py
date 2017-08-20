@@ -22,11 +22,9 @@ def arp_display(pkt):
 
             logging.info(button['name'] + " button pressed!")
             logging.info("Request: " + button['url'])
-
-            print(button['body'])
             
             try:
-                request = requests.post(button['url'], json=button['body'], headers=button['headers'])
+                request = requests.post(button['url'], json=json.loads(button['body']), headers=json.loads(button['headers']))
                 logging.info('Status Code: {}'.format(request.status_code))
                 
                 if request.status_code == requests.codes.ok:
@@ -49,7 +47,7 @@ logger.setLevel(logging.INFO)
 stdoutHandler = logging.StreamHandler(sys.stdout)
 stdoutHandler.setLevel(logging.INFO)
 
-formater = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+formater = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
 stdoutHandler.setFormatter(formater)
 
 logger.addHandler(stdoutHandler)
