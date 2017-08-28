@@ -11,7 +11,7 @@ import time
 
 
 def arp_display(pkt):
-    mac_arp = pkt[ARP].hwsrc.lower()
+    mac = pkt[ARP].hwsrc.lower()
 
     for button in config['buttons']:
         if mac == button['address'].lower() and guard[button['address']] == False:
