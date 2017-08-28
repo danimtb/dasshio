@@ -7,10 +7,11 @@ import requests
 from scapy.all import sniff
 from scapy.all import ARP
 import sys
+import time
 
 
 def arp_display(pkt):
-    mac = pkt[ARP].hwsrc.lower()
+    mac_arp = pkt[ARP].hwsrc.lower()
 
     for button in config['buttons']:
         if mac == button['address'].lower() and guard[button['address']] == False:
@@ -34,6 +35,7 @@ def arp_display(pkt):
             except:
                 logging.exception("Unable to perform  request: Check url, body and headers format. Check API password")
             finally:
+                time.sleep(6) # Wait 6 seconds to let dash button disconnect from wifi before scanning again
                 guard[button['address']] = False
 
 
