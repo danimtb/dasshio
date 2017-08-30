@@ -35,7 +35,7 @@ def arp_display(pkt):
             except:
                 logging.exception("Unable to perform  request: Check url, body and headers format. Check API password")
             finally:
-                time.sleep(6) # Wait 6 seconds to let dash button disconnect from wifi before scanning again
+                time.sleep(20) # Wait 6 seconds to let dash button disconnect from wifi before scanning again
                 guard[button['address']] = False
 
 
