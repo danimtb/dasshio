@@ -14,7 +14,7 @@ Examples:
 
 - Set a Dash Button to toggle **room_light** light:
   - url: *http://home_assistant_IP:8123/api/services/light/toggle*
-  - body: "*{\"entity_id\": \"light.room_light\"}*"
+  - body: "*{\\"entity_id\\": \\"light.room_light\\"}*"
 - Set a Dash Button to activate a **welcome_home** script:
   - url: *http://home_assistant_IP:8123/api/services/script/welcome_home*
   - body: ""
