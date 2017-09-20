@@ -11,32 +11,33 @@ import time
 
 
 def arp_display(pkt):
-    mac = pkt[ARP].hwsrc.lower()
+    if pkt[ARP].op == 1: # who-has (request)
+        mac = pkt[ARP].hwsrc.lower()
 
-    for button in config['buttons']:
-        if mac == button['address'].lower() and guard[button['address']] == False:
+        for button in config['buttons']:
+            if mac == button['address'].lower() and guard[button['address']] == False:
 
-            guard[button['address']] = True
+                guard[button['address']] = True
 
-            idx = [button['address'].lower() for button in config['buttons']].index(mac)
-            button = config['buttons'][idx]
+                idx = [button['address'].lower() for button in config['buttons']].index(mac)
+                button = config['buttons'][idx]
 
-            logging.info(button['name'] + " button pressed!")
-            logging.info("Request: " + button['url'])
-            
-            try:
-                request = requests.post(button['url'], json=json.loads(button['body']), headers=json.loads(button['headers']))
-                logging.info('Status Code: {}'.format(request.status_code))
+                logging.info(button['name'] + " button pressed!")
+                logging.info("Request: " + button['url'])
                 
-                if request.status_code == requests.codes.ok:
-                    logging.info("Successful request")
-                else:
-                    logging.error("Bad request")
-            except:
-                logging.exception("Unable to perform  request: Check url, body and headers format. Check API password")
-            finally:
-                time.sleep(20) # Wait 6 seconds to let dash button disconnect from wifi before scanning again
-                guard[button['address']] = False
+                try:
+                    request = requests.post(button['url'], json=json.loads(button['body']), headers=json.loads(button['headers']))
+                    logging.info('Status Code: {}'.format(request.status_code))
+                    
+                    if request.status_code == requests.codes.ok:
+                        logging.info("Successful request")
+                    else:
+                        logging.error("Bad request")
+                except:
+                    logging.exception("Unable to perform  request: Check url, body and headers format. Check API password")
+                finally:
+                    time.sleep(20) # Wait 6 seconds to let dash button disconnect from wifi before scanning again
+                    guard[button['address']] = False
 
 
 # Create basepath
