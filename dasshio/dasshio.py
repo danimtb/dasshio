@@ -6,38 +6,41 @@ import os
 import requests
 from scapy.all import sniff
 from scapy.all import ARP
+from scapy.all import UDP
+from scapy.all import IP
+from scapy.all import DHCP
+from scapy.all import Ether
 import sys
 import time
 
 
 def arp_display(pkt):
-    if pkt[ARP].op == 1: # who-has (request)
-        mac = pkt[ARP].hwsrc.lower()
+    mac = pkt[Ether].src.lower()
 
-        for button in config['buttons']:
-            if mac == button['address'].lower() and guard[button['address']] == False:
+    for button in config['buttons']:
+        if mac == button['address'].lower() and guard[button['address']] == False:
 
-                guard[button['address']] = True
+            guard[button['address']] = True
 
-                idx = [button['address'].lower() for button in config['buttons']].index(mac)
-                button = config['buttons'][idx]
+            idx = [button['address'].lower() for button in config['buttons']].index(mac)
+            button = config['buttons'][idx]
 
-                logging.info(button['name'] + " button pressed!")
-                logging.info("Request: " + button['url'])
+            logging.info(button['name'] + " button pressed!")
+            logging.info("Request: " + button['url'])
+            
+            try:
+                request = requests.post(button['url'], json=json.loads(button['body']), headers=json.loads(button['headers']))
+                logging.info('Status Code: {}'.format(request.status_code))
                 
-                try:
-                    request = requests.post(button['url'], json=json.loads(button['body']), headers=json.loads(button['headers']))
-                    logging.info('Status Code: {}'.format(request.status_code))
-                    
-                    if request.status_code == requests.codes.ok:
-                        logging.info("Successful request")
-                    else:
-                        logging.error("Bad request")
-                except:
-                    logging.exception("Unable to perform  request: Check url, body and headers format. Check API password")
-                finally:
-                    time.sleep(20) # Wait 6 seconds to let dash button disconnect from wifi before scanning again
-                    guard[button['address']] = False
+                if request.status_code == requests.codes.ok:
+                    logging.info("Successful request")
+                else:
+                    logging.error("Bad request")
+            except:
+                logging.exception("Unable to perform  request: Check url, body and headers format. Check API password")
+            finally:
+                time.sleep(20) # Wait 20 seconds to let dash button disconnect from wifi before scanning again
+                guard[button['address']] = False
 
 
 # Create basepath
@@ -70,4 +73,4 @@ for button in config['buttons']:
 
 # Start sniffing
 logging.info("Starting sniffing...")
-sniff(prn=arp_display, filter='arp', store=0, count=0)
+sniff(prn=arp_display, filter='udp and src port 68', store=0, count=0)
