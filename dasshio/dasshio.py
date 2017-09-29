@@ -15,10 +15,14 @@ import time
 
 
 def arp_display(pkt):
-    mac = pkt[Ether].src.lower()
+    mac = ""
+
+    try:
+        mac = pkt[ARP].hwsrc.lower()
+    except:
+        mac = pkt[Ether].src.lower()
 
     for button in config['buttons']:
-        print(n)
         if mac == button['address'].lower() and guard[button['address']] == False:
 
             guard[button['address']] = True
