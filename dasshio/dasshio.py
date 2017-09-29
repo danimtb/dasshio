@@ -18,6 +18,7 @@ def arp_display(pkt):
     mac = pkt[Ether].src.lower()
 
     for button in config['buttons']:
+        print(n)
         if mac == button['address'].lower() and guard[button['address']] == False:
 
             guard[button['address']] = True
@@ -73,4 +74,4 @@ for button in config['buttons']:
 
 # Start sniffing
 logging.info("Starting sniffing...")
-sniff(prn=arp_display, filter='udp and src port 68', store=0, count=0)
+sniff(prn=arp_display, filter='(arp or (udp and src port 68 and dst port 67)) and src host 0.0.0.0', store=0, count=0)
