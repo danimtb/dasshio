@@ -55,7 +55,7 @@ Here it is an example of a Dash Gillette used to toggle a light. Note you can ad
 }
 ```
 
-**WARNING**: As headers and body sections have to be strings, it is necessary to use slashes ( */* ) berore double quotes ( *"* ) to escape them. Like this:  *\\"*
+**WARNING**: As headers and body sections have to be strings, it is necessary to use backslashes ( *\\* ) before double quotes ( *"* ) to escape them. Like this:  *\\"*
 
 ## How to find the MAC address of your Dash
 At the moment, the best way to do this is to hold down the button for 6 seconds, disconnect from the current WIFI and connect to the *Amazon ConfigureMe* SSID.  If prompted, "stay connected" and open web page **192.168.0.1**. You will see your button’s ‘about’ page with the MAC and the additional information.
