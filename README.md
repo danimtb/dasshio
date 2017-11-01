@@ -13,10 +13,10 @@ See [RESTful API Post Services](https://home-assistant.io/developers/rest_api/#p
 Examples:
 
 - Set a Dash Button to toggle **room_light** light:
-  - url: *http://home_assistant_IP:8123/api/services/light/toggle*
+  - url: *http://homeassistant:8123/api/services/light/toggle*
   - body: "*{\\"entity_id\\": \\"light.room_light\\"}*"
 - Set a Dash Button to activate a **welcome_home** script:
-  - url: *http://home_assistant_IP:8123/api/services/script/welcome_home*
+  - url: *http://homeassistant:8123/api/services/script/welcome_home*
   - body: ""
  
  Have a look at [Service calls](https://home-assistant.io/docs/scripts/service-calls/) to know what services you can use and what you can do with them.
@@ -41,19 +41,21 @@ Here it is an example of a Dash Gillette used to toggle a light. Note you can ad
   {
     "name": "Gillette",
     "address": "AC:63:BE:77:C4:0D",
-    "url": "http://home_assistant_IP:8123/api/services/light/toggle",
+    "url": "http://homeassistant:8123/api/services/light/toggle",
     "headers": "{\"x-ha-access\": \"your_password\"}",
     "body": "{\"entity_id\": \"light.room_light\"}"
   },
   {
     "name": "Bounty",
     "address": "AC:63:BE:77:C4:0C",
-    "url": "https://home_assistant_url.duckdns.org/api/services/script/welcome_home",
+    "url": "https://example_ha_url.duckdns.org/api/services/script/welcome_home",
     "headers": "{}",
     "body": "{}"
   }]
 }
 ```
+
+**Note**: You can use the hostname `homeassistant` to route requests over the Hassio local network between the containers. This is the prefered method as it means the requests don't have to leave the machine Hassio is running on.
 
 **WARNING**: As headers and body sections have to be strings, it is necessary to use backslashes ( *\\* ) before double quotes ( *"* ) to escape them. Like this:  *\\"*
 
