@@ -47,6 +47,8 @@ def arp_display(pkt):
                 time.sleep(20) # Wait 20 seconds to let dash button disconnect from wifi before scanning again
                 guard[button['address']] = False
 
+# Remove Scapy IPv6 warnings
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 # Create basepath
 path = os.path.dirname(os.path.realpath(__file__))
