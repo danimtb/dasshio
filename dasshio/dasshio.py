@@ -80,4 +80,4 @@ for button in config['buttons']:
 
 # Start sniffing
 logging.info("Starting sniffing...")
-sniff(prn=arp_display, filter='(arp or (udp and src port 68 and dst port 67)) and src host 0.0.0.0', store=0, count=0)
+sniff(prn=arp_display, filter='arp', store=0, count=0)
