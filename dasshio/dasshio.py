@@ -23,9 +23,7 @@ def arp_display(pkt):
         mac = pkt[Ether].src.lower()
 
     for button in config['buttons']:
-        if mac == button['address'].lower() and guard[button['address']] == False:
-
-            guard[button['address']] = True
+        if mac == button['address'].lower():
 
             idx = [button['address'].lower() for button in config['buttons']].index(mac)
             button = config['buttons'][idx]
@@ -43,9 +41,7 @@ def arp_display(pkt):
                     logging.error("Bad request")
             except:
                 logging.exception("Unable to perform  request: Check url, body and headers format. Check API password")
-            finally:
-                time.sleep(20) # Wait 20 seconds to let dash button disconnect from wifi before scanning again
-                guard[button['address']] = False
+
 
 # Remove Scapy IPv6 warnings
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
@@ -71,12 +67,6 @@ logging.info("Reading config file: /data/options.json")
 
 with open(path + '/data/options.json', mode='r') as data_file:
     config = json.load(data_file)
-
-#Create Guard dict to avoid multiple requests with a single press and set to false for all buttons
-guard = dict()
-
-for button in config['buttons']:
-    guard[button['address']] = False
 
 # Start sniffing
 logging.info("Starting sniffing...")
