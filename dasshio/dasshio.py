@@ -12,7 +12,10 @@ from scapy.all import DHCP
 from scapy.all import Ether
 import sys
 import time
+import signal
 
+def signal_handler(signal, frame):
+    sys.exit(0)
 
 def arp_display(pkt):
     mac = ""
@@ -42,7 +45,12 @@ def arp_display(pkt):
             except:
                 logging.exception("Unable to perform  request: Check url, body and headers format. Check API password")
 
+            return True
 
+# Catch SIGINT/SIGTERM Signals
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
+    
 # Remove Scapy IPv6 warnings
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
@@ -61,13 +69,15 @@ stdoutHandler.setFormatter(formater)
 
 logger.addHandler(stdoutHandler)
 
-
 # Read config file
 logging.info("Reading config file: /data/options.json")
 
 with open(path + '/data/options.json', mode='r') as data_file:
     config = json.load(data_file)
 
-# Start sniffing
-logging.info("Starting sniffing...")
-sniff(prn=arp_display, filter='arp', store=0, count=0)
+while True:
+    # Start sniffing
+    logging.info("Starting sniffing...")
+    sniff(stop_filter=arp_display, filter='arp or (udp and src port 68 and dst port 67 and src host 0.0.0.0)', store=0, count=0)
+    logging.info("Packet captured, waiting 20s ...")
+    time.sleep(20)
