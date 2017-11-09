@@ -70,7 +70,7 @@ logging.info("Reading config file: /data/options.json")
 with open(path + '/data/options.json', mode='r') as data_file:
     config = json.load(data_file)
 
-#Create Guard dict to avoid multiple requests with a single press and set to false for all buttons
+# Create Guard dict to avoid multiple requests with a single press and set to false for all buttons
 guard = dict()
 
 for button in config['buttons']:
