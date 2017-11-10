@@ -6,7 +6,7 @@
 This is a python script used to scan wifi devices connected to your network  (using ARP). If a device matches any MAC address of the options, it will perform a HTTP POST request to the url given with headers and body indicated.
 
 ## Usage
-You can use this add-on to do whatever you like following the description above. However, the purpose of dasshio is to "integrate" [Amazon's Dash buttons](https://en.wikipedia.org/wiki/Amazon_Dash) in Home Assistant in an easy way with [Hass.io.](https://home-assistant.io/hassio/).
+You can use this add-on to do whatever you like following the description above. However, the purpose of dasshio is to "integrate" [Amazon's Dash buttons](https://en.wikipedia.org/wiki/Amazon_Dash) in Home Assistant in an easy way with [Hass.io](https://home-assistant.io/hassio/).
 
 See [RESTful API Post Services](https://home-assistant.io/developers/rest_api/#post-apiservicesltdomainltservice) documentation to see what you can do.
 
