@@ -54,7 +54,7 @@ Here it is an example of a Dash Gillette button used to toggle a light and a Das
   {
     "name": "Bounty",
     "address": "AC:63:BE:77:C4:0C",
-    "domain": "script"
+    "domain": "script",
     "service": "welcome_home",
     "service_data": "{}"
   }]
