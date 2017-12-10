@@ -3,21 +3,23 @@
 [Hass.io add-on](https://home-assistant.io/addons/) to use [Amazon Dash Buttons](https://en.wikipedia.org/wiki/Amazon_Dash) in [Home Assistant](https://home-assistant.io).
 
 ## Description: How dasshio works
-This is a python script used to scan wifi devices connected to your network  (using ARP). If a device matches any MAC address of the options, it will perform a HTTP POST request to the url given with headers and body indicated.
+This is a python script used to scan wifi devices connected to your network (using ARP and UDP). If a device matches any MAC address of the options, it will perform a HTTP POST request to the Home Assistant API.
 
 ## Usage
-You can use this add-on to do whatever you like following the description above. However, the purpose of Dasshio is to "integrate" [Amazon's Dash buttons](https://en.wikipedia.org/wiki/Amazon_Dash) in Home Assistant in an easy way with [Hass.io](https://home-assistant.io/hassio/).
+The purpose of Dasshio is to "integrate" [Amazon's Dash buttons](https://en.wikipedia.org/wiki/Amazon_Dash) in Home Assistant in an easy way with [Hass.io](https://home-assistant.io/hassio/).
 
 See [RESTful API Post Services](https://home-assistant.io/developers/rest_api/#post-apiservicesltdomainltservice) documentation to see what you can do.
 
 Examples:
 
 - Set a Dash Button to toggle **room_light** light:
-  - url: *http://hassio/homeassistant/api/services/light/toggle*
-  - body: "*{\\"entity_id\\": \\"light.room_light\\"}*"
+  - domain: *light*
+  - service: *toggle*
+  - service_data: *{\\"entity_id\\": \\"light.room_light\\"}*
 - Set a Dash Button to activate a **welcome_home** script:
-  - url: *http://hassio/homeassistant/api/services/script/welcome_home*
-  - body: ""
+  - domain: *script*
+  - service: *welcome_home*
+  - service_data: *{}*
  
  Have a look at [Service calls](https://home-assistant.io/docs/scripts/service-calls/) to know what services you can use and what you can do with them.
 
@@ -25,8 +27,42 @@ Examples:
 ## How to install this Hass.io add-on
 To install this add-on, please, follow Home Assistant documentation on how to [Install Third-party Add-ons](https://home-assistant.io/hassio/installing_third_party_addons/)
 
-## Options example
-Here it is an example of a Dash Gillette button used to toggle a light. Note you can add as many buttons as you like inside the "buttons" array.
+## Options example: domain, service, service_data
+Here it is an example of a Dash Gillette button used to toggle a light and a Dash Bounty to call a script. Note you can add as many buttons as you like inside the "buttons" array.
+
+ - name: name of your device
+ - address: MAC of your device
+ - domain: Home Assisntant domain (`light`, `switch`, `script`, `automation`...). Check [Home Assistant RESTful API](https://home-assistant.io/developers/rest_api/).
+ - service: Home Assistant service.
+ - service_data: Home Assistant service data to call the service (Optional).
+
+[*/data/options.json*](https://home-assistant.io/developers/hassio/addon_config/#options--schema)
+```
+{
+  "buttons": [
+  {
+    "name": "Gillette",
+    "address": "AC:63:BE:77:C4:0D",
+    "domain": "light",
+    "service": "toggle",
+    "service_data": "{\"entity_id\": \"light.room_light\"}"
+  },
+  {
+    "name": "Bounty",
+    "address": "AC:63:BE:77:C4:0C",
+    "domain": "script"
+    "service": "welcome_home",
+    "service_data": "{}"
+  }]
+}
+```
+
+**Note**: Dasshio uses `http://hassio/homeassistant/api/services/{domain}/{service}` as the base url to route requests over the Hassio local network between the containers. This is the prefered method as it means the requests don't have to leave the machine Hassio is running on (See [Hass.io Addon Communication](https://home-assistant.io/developers/hassio/addon_communication/#home-assistant)).
+
+**WARNING**: As headers and body sections have to be strings, it is necessary to use backslashes ( *\\* ) before double quotes ( *"* ) to escape them. Like this:  *\\"*
+
+## Options: url, body, headers
+Another possiblity would be to use Dasshio to perform a HTTP Post request to an URL outside Home Assistant. To do so you can use the configuration below.
 
  - name: name of your device
  - address: MAC of your device
@@ -41,23 +77,22 @@ Here it is an example of a Dash Gillette button used to toggle a light. Note you
   {
     "name": "Gillette",
     "address": "AC:63:BE:77:C4:0D",
-    "url": "http://hassio/homeassistant/api/services/light/toggle",
-    "headers": "{\"x-ha-access\": \"your_password\"}",
-    "body": "{\"entity_id\": \"light.room_light\"}"
+    "url": "http://httpbin.org/post",
+    "headers": "{}",
+    "body": "{\"payload\": \"This is an HTTP Post request!\"}"
   },
   {
     "name": "Bounty",
     "address": "AC:63:BE:77:C4:0C",
-    "url": "https://example_ha_url.duckdns.org/api/services/script/welcome_home",
+    "url": "http://hassio/homeassistant/api/services/script/welcome_home",
     "headers": "{}",
     "body": "{}"
   }]
 }
 ```
 
-**Note**: It is strongly recommended to use the hostname `hassio/homeassistant` to route requests over the Hassio local network between the containers. This is the prefered method as it means the requests don't have to leave the machine Hassio is running on (See [Hass.io Addon Communication](https://home-assistant.io/developers/hassio/addon_communication/#home-assistant)).
+**Note**: As described above, you can still use `http://hassio/homeassistant/api` to route requests over the Hassio local network and perform API calls to Home Assistant. You can see [Hass.io Addon Communication](https://home-assistant.io/developers/hassio/addon_communication/#home-assistant) for more information.
 
-**WARNING**: As headers and body sections have to be strings, it is necessary to use backslashes ( *\\* ) before double quotes ( *"* ) to escape them. Like this:  *\\"*
 
 ## How to find the MAC address of your Dash
 At the moment, the best way to do this is to hold down the button for 6 seconds, disconnect from the current WIFI and connect to the *Amazon ConfigureMe* SSID.  If prompted, "stay connected" and open web page **192.168.0.1**. You will see your button’s ‘about’ page with the MAC and the additional information.
