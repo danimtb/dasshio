@@ -12,7 +12,10 @@
     "buttons": [
       {
         "name": "null",
-        "address": "null"
+        "address": "null",
+        "domain": "",
+        "service": "",
+        "service_data": ""
       }
     ]
   },
@@ -20,7 +23,13 @@
     "buttons": [
       {
         "name": "str",
-        "address": "str"
+        "address": "str",
+        "url": "str?",
+        "headers": "str?",
+        "body": "str?",
+        "domain": "str?",
+        "service": "str?",
+        "service_data": "str?"
       }
     ]
   }
