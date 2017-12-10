@@ -99,25 +99,46 @@ with open(path + "/data/options.json", mode="r") as data_file:
     config = json.load(data_file)
 
 # Check config parameters
-cpt = 0
-error = 0
+button_counter = 0
+error = False
+
 for button in config["buttons"]:
-    cpt = cpt + 1
+    button_counter = button_counter + 1
     if ("address" not in button) or (not button["address"]) or (not re.match("[0-9a-f]{2}([-:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", button["address"].lower())):
-        logging.info("Parameter error for button " +
-                     str(cpt) + " : address is not valid")
-        error = error + 1
-    for value in ("name", "url"):
-        if (value not in button) or (not button[value]) or (button[value] == "null"):
-            logging.info("Parameter error for button " +
-                         str(cpt) + " : " + value + " is null")
-            error = error + 1
-    for value in ("body", "headers"):
-        if (value not in button) or (not button[value]):
-            button[value] = "{}"
-if error != 0:
-    logging.info("Exiting ...")
+        logging.error("Parameter error for button " +
+                     str(button_counter) + ": [address] is not valid")
+        error = True
+    
+    if ("name" not in button) or (not button["name"]) or (button["name"] == "null"):
+        logging.error("Parameter error for button " +
+                     str(button_counter) + ": [name] is null")
+        error = True
+
+    if not ("url" and "body" and "headers") in button and not ("domain" and "service" and "service_data") in button:
+        logging.error("Parameter error for button " + str(button_counter) + ": No config [url], [body], [headers] or [domain], [service], [service_data] provided")
+        error = True
+
+    if ("url" and "body" and "headers") in button:
+        for value in ("url", "body", "headers"):
+            if (value not in button) or (not button[value]):
+                if value is "url":
+                    logging.error("Parameter error for button " + str(button_counter) + ": No [url] provided")
+                    error = True
+                button[value] = "{}"
+
+    if ("domain" and "service" and "service_data") in button:
+        for value in ("domain", "service", "service_data"):
+            if (value not in button) or (not button[value]):
+                if value is "domain" or "service":
+                    logging.error("Parameter error for button " +
+                                  str(button_counter) + ": No [domain] or [service] provided")
+                    error = True
+                button[value] = "{}"
+
+if error:
+    logging.info("Exiting...")
     sys.exit(0)
+
 
 while True:
     # Start sniffing
