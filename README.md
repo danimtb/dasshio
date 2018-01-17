@@ -99,6 +99,10 @@ Another possibility would be to use Dasshio to perform a HTTP Post request to an
 
 **Note**: As described above, you can still use `http://hassio/homeassistant/api` to route requests over the Hassio local network and perform API calls to Home Assistant. You can see [Hass.io Addon Communication](https://home-assistant.io/developers/hassio/addon_communication/#home-assistant) for more information.
 
+## Options: timeout
+
+By default Dasshio waits 20 seconds after a button press before resuming, this is to avoid detecting duplicate button presses. This option allows you to change this delay, if you want more responsive buttons then decrease this value and increase it if you experience duplicate presses.
+
 ## How to find the MAC address of your Dash
 
 At the moment, the best way to do this is to hold down the button for 6 seconds, disconnect from the current Wi-Fi and connect to the *Amazon ConfigureMe* SSID.  If prompted, "stay connected" and open web page **192.168.0.1**. You will see your button’s ‘about’ page with the MAC and the additional information.
