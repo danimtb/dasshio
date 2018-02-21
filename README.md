@@ -4,7 +4,7 @@
 
 ## Description: How dasshio works
 
-This is a python script used to scan wifi devices connected to your network (using ARP and UDP). If a device matches any MAC address of the options, it will perform a HTTP POST request to the Home Assistant API.
+This is a python script used to scan Wi-Fi devices connected to your network (using ARP and UDP). If a device matches any MAC address of the options, it will perform a HTTP POST request to the Home Assistant API.
 
 ## Usage
 
@@ -35,7 +35,7 @@ Here it is an example of a Dash Gillette button used to toggle a light and a Das
 
 - name: name of your device
 - address: MAC of your device
-- domain: Home Assisntant domain (`light`, `switch`, `script`, `automation`...). Check [Home Assistant RESTful API](https://home-assistant.io/developers/rest_api/).
+- domain: Home Assistant domain (`light`, `switch`, `script`, `automation`...). Check [Home Assistant RESTful API](https://home-assistant.io/developers/rest_api/).
 - service: Home Assistant service.
 - service_data: Home Assistant service data to call the service (Optional).
 
@@ -54,7 +54,7 @@ Here it is an example of a Dash Gillette button used to toggle a light and a Das
   {
     "name": "Bounty",
     "address": "AC:63:BE:77:C4:0C",
-    "domain": "script"
+    "domain": "script",
     "service": "welcome_home",
     "service_data": "{}"
   }]
@@ -67,7 +67,7 @@ Here it is an example of a Dash Gillette button used to toggle a light and a Das
 
 ## Options: url, body, headers
 
-Another possiblity would be to use Dasshio to perform a HTTP Post request to an URL outside Home Assistant. To do so you can use the configuration below.
+Another possibility would be to use Dasshio to perform a HTTP Post request to an URL outside Home Assistant. To do so you can use the configuration below.
 
 - name: name of your device
 - address: MAC of your device
@@ -99,11 +99,15 @@ Another possiblity would be to use Dasshio to perform a HTTP Post request to an 
 
 **Note**: As described above, you can still use `http://hassio/homeassistant/api` to route requests over the Hassio local network and perform API calls to Home Assistant. You can see [Hass.io Addon Communication](https://home-assistant.io/developers/hassio/addon_communication/#home-assistant) for more information.
 
+## Options: timeout
+
+By default Dasshio waits 20 seconds after a button press before resuming, this is to avoid detecting duplicate button presses. This option allows you to change this delay, if you want more responsive buttons then decrease this value and increase it if you experience duplicate presses.
+
 ## How to find the MAC address of your Dash
 
-At the moment, the best way to do this is to hold down the button for 6 seconds, disconnect from the current WIFI and connect to the *Amazon ConfigureMe* SSID.  If prompted, "stay connected" and open web page **192.168.0.1**. You will see your button’s ‘about’ page with the MAC and the additional information.
+At the moment, the best way to do this is to hold down the button for 6 seconds, disconnect from the current Wi-Fi and connect to the *Amazon ConfigureMe* SSID.  If prompted, "stay connected" and open web page **192.168.0.1**. You will see your button’s ‘about’ page with the MAC and the additional information.
 
-Alternatively, you can access your Wifi Router and check the MAC addresses in the history of connected devices. Then, copy and paste the MAC in a service like [MA:CV:en:do:rs](https://macvendors.com/) to find the Vendor of that device. The Amazon Dash button vendor should be: *Amazon Technologies Inc.*
+Alternatively, you can access your Wi-Fi Router and check the MAC addresses in the history of connected devices. Then, copy and paste the MAC in a service like [MA:CV:en:do:rs](https://macvendors.com/) to find the Vendor of that device. The Amazon Dash button vendor should be: *Amazon Technologies Inc.*
 
 ---------------------
 
