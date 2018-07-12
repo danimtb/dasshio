@@ -43,6 +43,7 @@ Here it is an example of a Dash Gillette button used to toggle a light and a Das
 
 ```json
 {
+  "timeout": 20,
   "buttons": [
   {
     "name": "Gillette",
@@ -79,6 +80,7 @@ Another possibility would be to use Dasshio to perform a HTTP Post request to an
 
 ```json
 {
+  "timeout": 20,
   "buttons": [
   {
     "name": "Gillette",
