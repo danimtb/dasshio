@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from datetime import datetime, timedelta
 import json
 import logging
 import os
@@ -11,7 +12,6 @@ from scapy.all import IP
 from scapy.all import DHCP
 from scapy.all import Ether
 import sys
-import time
 import signal
 import re
 
@@ -30,6 +30,9 @@ def arp_display(pkt):
 
     for button in config["buttons"]:
         if mac == button["address"].lower():
+            if (datetime.now() - timeout_guard[button["address"].lower()]).seconds < int(config["timeout"]):
+                logging.info("Packet captured from button " + button["name"] + " delayed during " + str(timeout) + "s ...")
+                return True
 
             idx = [button["address"].lower()
                    for button in config["buttons"]].index(mac)
@@ -67,6 +70,7 @@ def arp_display(pkt):
                     "Unable to perform  request: Check [url], [body], [headers] and API password or\
                      [domain], [service] and [service_data] format.")
 
+            timeout_guard[button["address"].lower()] = datetime.now()
             return True
 
 
@@ -101,8 +105,10 @@ with open(path + "/data/options.json", mode="r") as data_file:
 # Check config parameters
 button_counter = 0
 error = False
+timeout_guard = []
 
 for button in config["buttons"]:
+    timeout_guard[button["address"].lower()] = datetime.now()
     button_counter = button_counter + 1
     if ("address" not in button) or (not button["address"]) or (not re.match("[0-9a-f]{2}([-:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", button["address"].lower())):
         logging.error("Parameter error for button " +
@@ -139,17 +145,12 @@ if error:
     logging.info("Exiting...")
     sys.exit(0)
 
-
 while True:
     # Start sniffing
     logging.info("Starting sniffing...")
     try:
         sniff(stop_filter=arp_display,
               filter="arp or (udp and src port 68 and dst port 67 and src host 0.0.0.0)",
-              store=0,
-              count=0)
+              store=0, count=0)
     except(OSError):
         pass
-    timeout = config["timeout"]
-    logging.info("Packet captured, waiting " + str(timeout) + "s ...")
-    time.sleep(timeout)
