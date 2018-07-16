@@ -1,0 +1,10 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - sudo apt-get install jq
+env:
+  - ADDON="dasshio"
+script:
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - ./build.sh $ADDON
