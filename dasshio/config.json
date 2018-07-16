@@ -8,6 +8,12 @@
   "boot": "auto",
   "host_network": "True",
   "homeassistant_api": "True",
+  "arch": [
+    "aarch64",
+    "amd64",
+    "armhf",
+    "i386"
+  ],
   "options": {
     "timeout": 20,
     "buttons": [
