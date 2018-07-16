@@ -110,7 +110,7 @@ data_file.close()
 # Check config parameters
 button_counter = 0
 error = False
-timeout_guard = []
+timeout_guard = {}
 
 for button in config["buttons"]:
     timeout_guard[button["address"].lower()] = datetime.now()
