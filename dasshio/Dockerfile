@@ -14,7 +14,6 @@ COPY dasshio.py /
 
 CMD ["python3", "dasshio.py"]
 
-
 # Build arugments
 ARG BUILD_DATE
 ARG BUILD_REF
