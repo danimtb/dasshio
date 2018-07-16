@@ -14,6 +14,7 @@
     "armhf",
     "i386"
   ],
+  "image": "homeassistant/{arch}-base",
   "options": {
     "timeout": 20,
     "buttons": [
