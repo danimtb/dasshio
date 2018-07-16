@@ -14,7 +14,7 @@
     "armhf",
     "i386"
   ],
-  "image": "homeassistant/{arch}-base",
+  "image": "danimtb/{arch}-dasshio",
   "options": {
     "timeout": 20,
     "buttons": [
