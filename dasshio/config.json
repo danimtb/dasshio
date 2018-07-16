@@ -6,8 +6,8 @@
   "url": "https://github.com/danimtb/dasshio",
   "startup": "services",
   "boot": "auto",
-  "host_network": "True",
-  "homeassistant_api": "True",
+  "host_network": true,
+  "homeassistant_api": true,
   "arch": [
     "aarch64",
     "amd64",
