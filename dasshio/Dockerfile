@@ -12,7 +12,7 @@ RUN pip3 install --requirement /tmp/requirements.txt
 # Copy data for add-on
 COPY dasshio.py /
 
-CMD ["python3", "dasshio.py"]
+CMD ["python3", "/dasshio.py"]
 
 # Build arugments
 ARG BUILD_DATE
