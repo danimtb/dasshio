@@ -4,6 +4,10 @@ from datetime import datetime, timedelta
 import json
 import logging
 import os
+import sys
+import time
+import signal
+import re
 import requests
 from scapy.all import sniff
 from scapy.all import ARP
@@ -51,7 +55,6 @@ def arp_display(pkt):
             logging.info("Request: " + url_request)
 
             try:
-
                 if "url" in button:
                     request = requests.post(url_request, json=json.loads(
                         button["body"]), headers=json.loads(button["headers"]))
@@ -59,7 +62,7 @@ def arp_display(pkt):
                     request = requests.post(url_request, json=json.loads(
                         button["service_data"]))
 
-                logging.info("Status Code: {}".format(request.status_code))
+                logging.info("Status Code: %s" % request.status_code)
 
                 if request.status_code == requests.codes.ok:
                     logging.info("Successful request")
@@ -99,8 +102,10 @@ logger.addHandler(stdoutHandler)
 # Read config file
 logging.info("Reading config file: /data/options.json")
 
+
 with open(path + "/data/options.json", mode="r") as data_file:
     config = json.load(data_file)
+data_file.close()
 
 # Check config parameters
 button_counter = 0
@@ -111,24 +116,24 @@ for button in config["buttons"]:
     timeout_guard[button["address"].lower()] = datetime.now()
     button_counter = button_counter + 1
     if ("address" not in button) or (not button["address"]) or (not re.match("[0-9a-f]{2}([-:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", button["address"].lower())):
-        logging.error("Parameter error for button " +
-                     str(button_counter) + ": [address] is not valid")
+        logging.error("Parameter error for button %s: [address] is not valid" % str(button_counter))
         error = True
-    
+
     if ("name" not in button) or (not button["name"]) or (button["name"] == "null"):
-        logging.error("Parameter error for button " +
-                     str(button_counter) + ": [name] is null")
+        logging.error("Parameter error for button %s: [name] is null" % str(button_counter))
         error = True
 
     if not ("url" and "body" and "headers") in button and not ("domain" and "service" and "service_data") in button:
-        logging.error("Parameter error for button " + str(button_counter) + ": No config [url], [body], [headers] or [domain], [service], [service_data] provided")
+        logging.error("Parameter error for button %s: No config [url], [body], [headers] or "
+                      "[domain], [service], [service_data] provided" % str(button_counter))
         error = True
 
     if ("url" and "body" and "headers") in button:
         for value in ("url", "body", "headers"):
             if (value not in button) or (not button[value]):
                 if value is "url":
-                    logging.error("Parameter error for button " + str(button_counter) + ": No [url] provided")
+                    logging.error(
+                        "Parameter error for button %s: No [url] provided" % str(button_counter))
                     error = True
                 button[value] = "{}"
 

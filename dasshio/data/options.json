@@ -1,0 +1,11 @@
+{
+"buttons": [
+{
+"name": "Gillette",
+"address": "AC:63:BE:96:C4:0D",
+"url": "https://trotacaminos2.duckdns.org/api/services/light/toggle",
+"headers": "{\"x-ha-access\": \"8471rmda\"}",
+"body": "{\"entity_id\": \"light.luz_ambiente\"}"
+}
+]
+}
