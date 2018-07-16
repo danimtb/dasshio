@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 
-from datetime import datetime, timedelta
 import json
 import logging
 import os
-import sys
-import time
-import signal
-import re
 import requests
 from scapy.all import sniff
 from scapy.all import ARP
@@ -16,6 +11,7 @@ from scapy.all import IP
 from scapy.all import DHCP
 from scapy.all import Ether
 import sys
+import time
 import signal
 import re
 
@@ -34,9 +30,6 @@ def arp_display(pkt):
 
     for button in config["buttons"]:
         if mac == button["address"].lower():
-            if (datetime.now() - timeout_guard[button["address"].lower()]).seconds < int(config["timeout"]):
-                logging.info("Packet captured from button " + button["name"] + " delayed during " + str(timeout) + "s ...")
-                return True
 
             idx = [button["address"].lower()
                    for button in config["buttons"]].index(mac)
@@ -62,7 +55,7 @@ def arp_display(pkt):
                     request = requests.post(url_request, json=json.loads(
                         button["service_data"]))
 
-                logging.info("Status Code: %s" % request.status_code)
+                logging.info("Status Code: {}".format(request.status_code))
 
                 if request.status_code == requests.codes.ok:
                     logging.info("Successful request")
@@ -73,7 +66,6 @@ def arp_display(pkt):
                     "Unable to perform  request: Check [url], [body], [headers] and API password or\
                      [domain], [service] and [service_data] format.")
 
-            timeout_guard[button["address"].lower()] = datetime.now()
             return True
 
 
@@ -102,38 +94,34 @@ logger.addHandler(stdoutHandler)
 # Read config file
 logging.info("Reading config file: /data/options.json")
 
-
 with open(path + "/data/options.json", mode="r") as data_file:
     config = json.load(data_file)
-data_file.close()
 
 # Check config parameters
 button_counter = 0
 error = False
-timeout_guard = {}
 
 for button in config["buttons"]:
-    timeout_guard[button["address"].lower()] = datetime.now()
     button_counter = button_counter + 1
     if ("address" not in button) or (not button["address"]) or (not re.match("[0-9a-f]{2}([-:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", button["address"].lower())):
-        logging.error("Parameter error for button %s: [address] is not valid" % str(button_counter))
+        logging.error("Parameter error for button " +
+                     str(button_counter) + ": [address] is not valid")
         error = True
 
     if ("name" not in button) or (not button["name"]) or (button["name"] == "null"):
-        logging.error("Parameter error for button %s: [name] is null" % str(button_counter))
+        logging.error("Parameter error for button " +
+                     str(button_counter) + ": [name] is null")
         error = True
 
     if not ("url" and "body" and "headers") in button and not ("domain" and "service" and "service_data") in button:
-        logging.error("Parameter error for button %s: No config [url], [body], [headers] or "
-                      "[domain], [service], [service_data] provided" % str(button_counter))
+        logging.error("Parameter error for button " + str(button_counter) + ": No config [url], [body], [headers] or [domain], [service], [service_data] provided")
         error = True
 
     if ("url" and "body" and "headers") in button:
         for value in ("url", "body", "headers"):
             if (value not in button) or (not button[value]):
                 if value is "url":
-                    logging.error(
-                        "Parameter error for button %s: No [url] provided" % str(button_counter))
+                    logging.error("Parameter error for button " + str(button_counter) + ": No [url] provided")
                     error = True
                 button[value] = "{}"
 
@@ -150,12 +138,17 @@ if error:
     logging.info("Exiting...")
     sys.exit(0)
 
+
 while True:
     # Start sniffing
     logging.info("Starting sniffing...")
     try:
         sniff(stop_filter=arp_display,
               filter="arp or (udp and src port 68 and dst port 67 and src host 0.0.0.0)",
-              store=0, count=0)
+              store=0,
+              count=0)
     except(OSError):
         pass
+    timeout = config["timeout"]
+    logging.info("Packet captured, waiting " + str(timeout) + "s ...")
+    time.sleep(timeout)
