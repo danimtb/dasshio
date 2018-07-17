@@ -16,6 +16,7 @@ COPY dasshio.py /
 ARG BUILD_DATE
 ARG BUILD_REF
 ARG BUILD_VERSION
+ARG BUILD_ARCH
 
 # Labels
 LABEL \
@@ -35,4 +36,5 @@ LABEL \
     org.label-schema.vcs-url="https://github.com/danimtb/dasshio" \
     org.label-schema.vendor="Dash Hass.io Add-on"
 
+RUN chmod a+x /dasshio.py
 CMD ["python3", "/dasshio.py"]
