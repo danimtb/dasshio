@@ -4,15 +4,13 @@ FROM $BUILD_FROM
 ENV LANG C.UTF-8
 
 # Setup
-RUN apk add --no-cache python3 python3-dev gcc linux-headers musl-dev tcpdump \
+RUN apk add --no-cache -U python3 python3-dev gcc linux-headers musl-dev tcpdump \
     && pip3 install --no-cache --upgrade pip
 COPY requirements.txt /tmp/
-RUN pip3 install --requirement /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
 
 # Copy data for add-on
 COPY dasshio.py /
-
-CMD ["python3", "/dasshio.py"]
 
 # Build arugments
 ARG BUILD_DATE
@@ -36,3 +34,5 @@ LABEL \
     org.label-schema.vcs-ref=${BUILD_REF} \
     org.label-schema.vcs-url="https://github.com/danimtb/dasshio" \
     org.label-schema.vendor="Dash Hass.io Add-on"
+
+CMD ["python3", "/dasshio.py"]
