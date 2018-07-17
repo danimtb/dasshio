@@ -37,4 +37,4 @@ LABEL \
     org.label-schema.vendor="Dash Hass.io Add-on"
 
 RUN chmod a+x /dasshio.py
-CMD ["python3", "/dasshio.py"]
+ENTRYPOINT ["python3", "/dasshio.py"]
