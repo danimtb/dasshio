@@ -53,7 +53,7 @@ def arp_display(pkt):
                         button["body"]), headers=json.loads(button["headers"]))
                 else:
                     request = requests.post(url_request, json=json.loads(
-                        button["service_data"]))
+                        button["service_data"]), headers={'x-ha-access': os.environ.get('HASSIO_TOKEN')})
 
                 logging.info("Status Code: {}".format(request.status_code))
 
