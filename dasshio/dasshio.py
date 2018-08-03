@@ -31,6 +31,12 @@ def arp_display(pkt):
     for button in config["buttons"]:
         if mac == button["address"].lower():
 
+            timelapsed = time.time() - button["last_press_t"]
+            if timelapsed < button["timeout"]:
+                logging.info("Timeout: %s button pressed before timeout has expired! "
+                             "Waiting %.1f more seconds." % (button["name"], (button["timeout"] - timelapsed)))
+                return False
+
             idx = [button["address"].lower()
                    for button in config["buttons"]].index(mac)
             button = config["buttons"][idx]
@@ -38,7 +44,7 @@ def arp_display(pkt):
             logging.info(button["name"] + " button pressed!")
 
             url_request = ""
-
+            
             if "url" in button:
                 url_request = button["url"]
             else:
@@ -66,6 +72,9 @@ def arp_display(pkt):
                     "Unable to perform  request: Check [url], [body], [headers] and API password or\
                      [domain], [service] and [service_data] format.")
 
+            logging.info("Packet captured, waiting %d seconds for button %s..." % (button["timeout"], button["name"]))
+            button["last_press_t"] = time.time()
+
             return True
 
 
@@ -92,7 +101,7 @@ stdoutHandler.setFormatter(formater)
 logger.addHandler(stdoutHandler)
 
 # Read config file
-logging.info("Reading config file: /data/options.json")
+logging.info("fork... Reading config file: /data/options.json")
 
 with open(path + "/data/options.json", mode="r") as data_file:
     config = json.load(data_file)
@@ -100,7 +109,6 @@ with open(path + "/data/options.json", mode="r") as data_file:
 # Check config parameters
 button_counter = 0
 error = False
-
 for button in config["buttons"]:
     button_counter = button_counter + 1
     if ("address" not in button) or (not button["address"]) or (not re.match("[0-9a-f]{2}([-:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", button["address"].lower())):
@@ -133,6 +141,8 @@ for button in config["buttons"]:
                                   str(button_counter) + ": No [domain] or [service] provided")
                     error = True
                 button[value] = "{}"
+    button["timeout"] = config["timeout"]
+    button["last_press_t"] = time.time() - button["timeout"]
 
 if error:
     logging.info("Exiting...")
@@ -149,6 +159,3 @@ while True:
               count=0)
     except(OSError):
         pass
-    timeout = config["timeout"]
-    logging.info("Packet captured, waiting " + str(timeout) + "s ...")
-    time.sleep(timeout)
