@@ -100,7 +100,18 @@ Another possibility would be to use Dasshio to perform a HTTP Post request to an
 ```
 
 **Note**: As described above, you can still use `http://hassio/homeassistant/api` to route requests over the Hassio local network and perform API calls to Home Assistant. You can see [Hass.io Addon Communication](https://home-assistant.io/developers/hassio/addon_communication/#home-assistant) for more information.
+For those running Hass.io in Docker you must add the docker internal IP address to HTTP trusted_networks in the configuration.yaml file.
 
+```yaml
+# Example configuration.yaml entry
+http:
+    trusted_networks:
+    - 127.0.0.1
+    - 192.168.0.0/24
+    - 172.17.0.0/16 # Example Docker bridge - change to your relevent ip subnet range.
+    - 172.30.32.0/23 # Example Docker hassio - change to your relevent ip subnet range.
+```    
+    
 ## Options: timeout
 
 By default Dasshio waits 20 seconds after a button press before resuming, this is to avoid detecting duplicate button presses. This option allows you to change this delay, if you want more responsive buttons then decrease this value and increase it if you experience duplicate presses.
