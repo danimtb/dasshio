@@ -16,12 +16,18 @@ import signal
 import re
 
 
+BASE_URL = os.environ.get("HA_BASE_URL") or "http://hassio/homeassistant"
+
+
 def signal_handler(signal, frame):
     sys.exit(0)
 
 
 def arp_display(pkt):
     mac = ""
+    current_time = datetime.utcnow()
+    button_timeout = int(config["timeout"]) if "timeout" in config else 10
+    request_timeout_secs = config["request_timeout_secs"] if "reuqest_timeout_secs" in config else 0.5
 
     try:
         mac = pkt[ARP].hwsrc.lower()
@@ -29,14 +35,15 @@ def arp_display(pkt):
         mac = pkt[Ether].src.lower()
 
     for button in config["buttons"]:
-        if mac == button["address"].lower():
-            if (datetime.now() - timeout_guard[button["address"].lower()]).seconds < int(config["timeout"]):
-                logging.info("Packet captured from button " + button["name"] + " delayed during " + str(timeout) + "s ...")
+        button_address = button["address"].lower()
+        if mac == button_address:
+            last_pressed = timeout_guard[button_address]
+            guard_time = last_pressed + timedelta(seconds=int(button_timeout))
+            if current_time < guard_time:
+                logging.info("Packet captured from button " + button["name"] +
+                             " ignored during guard time of " + str(button_timeout) + "s ...")
                 return True
-
-            idx = [button["address"].lower()
-                   for button in config["buttons"]].index(mac)
-            button = config["buttons"][idx]
+            timeout_guard[button_address] = current_time
 
             logging.info(button["name"] + " button pressed!")
 
@@ -45,19 +52,25 @@ def arp_display(pkt):
             if "url" in button:
                 url_request = button["url"]
             else:
-                url_request = "http://hassio/homeassistant/api/services/{0}/{1}".format(
+                url_request = BASE_URL + "/api/services/{0}/{1}".format(
                     button["domain"].lower(), button["service"].lower())
 
-            logging.info("Request: " + url_request)
-
             try:
-
                 if "url" in button:
-                    request = requests.post(url_request, json=json.loads(
-                        button["body"]), headers=json.loads(button["headers"]))
+                    request = requests.post(url_request,
+                        json=json.loads(
+                        button["body"]), headers=json.loads(button["headers"]),
+                        timeout=request_timeout_secs
+                    )
+                    logging.info("Request: " + url_request + " - body: " + button["body"])
                 else:
-                    request = requests.post(url_request, json=json.loads(
-                        button["service_data"]), headers={'x-ha-access': os.environ.get('HASSIO_TOKEN')})
+                    auth_header = "Bearer " + os.environ.get('HASSIO_TOKEN')
+                    request = requests.post(url_request,
+                        json=json.loads(button["service_data"]),
+                        headers={'Authorization': auth_header},
+                        timeout=request_timeout_secs
+                    )
+                    logging.info("Request: " + url_request + " - body: " + button["service_data"])
 
                 logging.info("Status Code: {}".format(request.status_code))
 
@@ -70,7 +83,6 @@ def arp_display(pkt):
                     "Unable to perform  request: Check [url], [body], [headers] and API password or\
                      [domain], [service] and [service_data] format.")
 
-            timeout_guard[button["address"].lower()] = datetime.now()
             return True
 
 
@@ -105,7 +117,7 @@ with open(path + "/data/options.json", mode="r") as data_file:
 # Check config parameters
 button_counter = 0
 error = False
-timeout_guard = []
+timeout_guard = {}
 
 for button in config["buttons"]:
     timeout_guard[button["address"].lower()] = datetime.now()
@@ -114,7 +126,7 @@ for button in config["buttons"]:
         logging.error("Parameter error for button " +
                      str(button_counter) + ": [address] is not valid")
         error = True
-    
+
     if ("name" not in button) or (not button["name"]) or (button["name"] == "null"):
         logging.error("Parameter error for button " +
                      str(button_counter) + ": [name] is null")
@@ -145,12 +157,20 @@ if error:
     logging.info("Exiting...")
     sys.exit(0)
 
+
 while True:
-    # Start sniffing
-    logging.info("Starting sniffing...")
     try:
-        sniff(stop_filter=arp_display,
-              filter="arp or (udp and src port 68 and dst port 67 and src host 0.0.0.0)",
-              store=0, count=0)
-    except(OSError):
-        pass
+        # Start sniffing
+        logging.info("Starting sniffing...")
+        try:
+            sniff(stop_filter=arp_display,
+                  filter="arp or (udp and src port 68 and dst port 67 and src host 0.0.0.0)",
+                  store=0,
+                  count=0)
+        except(OSError):
+            pass
+    except:
+        logging.exception("Unexpected exception")
+        raise
+    finally:
+        logging.info("Exiting...")
