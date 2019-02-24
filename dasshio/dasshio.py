@@ -20,6 +20,8 @@ BASE_URL = os.environ.get("HA_BASE_URL") or "http://hassio/homeassistant"
 
 
 def signal_handler(signal, frame):
+    logger.warning("Caught signal: %s" % signal)
+    logger.info("Exiting...")
     sys.exit(0)
 
 
@@ -40,12 +42,12 @@ def arp_display(pkt):
             last_pressed = timeout_guard[button_address]
             guard_time = last_pressed + timedelta(seconds=int(button_timeout))
             if current_time < guard_time:
-                logging.info("Packet captured from button " + button["name"] +
+                logger.info("Packet captured from button " + button["name"] +
                              " ignored during guard time of " + str(button_timeout) + "s ...")
                 return True
             timeout_guard[button_address] = current_time
 
-            logging.info(button["name"] + " button pressed!")
+            logger.info(button["name"] + " button pressed!")
 
             url_request = ""
 
@@ -62,7 +64,7 @@ def arp_display(pkt):
                         button["body"]), headers=json.loads(button["headers"]),
                         timeout=request_timeout_secs
                     )
-                    logging.info("Request: " + url_request + " - body: " + button["body"])
+                    logger.info("Request: " + url_request + " - body: " + button["body"])
                 else:
                     auth_header = "Bearer " + os.environ.get('HASSIO_TOKEN')
                     request = requests.post(url_request,
@@ -70,16 +72,16 @@ def arp_display(pkt):
                         headers={'Authorization': auth_header},
                         timeout=request_timeout_secs
                     )
-                    logging.info("Request: " + url_request + " - body: " + button["service_data"])
+                    logger.info("Request: " + url_request + " - body: " + button["service_data"])
 
-                logging.info("Status Code: {}".format(request.status_code))
+                logger.info("Status Code: {}".format(request.status_code))
 
                 if request.status_code == requests.codes.ok:
-                    logging.info("Successful request")
+                    logger.info("Successful request")
                 else:
-                    logging.error("Bad request")
+                    logger.error("Bad request")
             except:
-                logging.exception(
+                logger.exception(
                     "Unable to perform  request: Check [url], [body], [headers] and API password or\
                      [domain], [service] and [service_data] format.")
 
@@ -103,13 +105,13 @@ logger.setLevel(logging.INFO)
 stdoutHandler = logging.StreamHandler(sys.stdout)
 stdoutHandler.setLevel(logging.INFO)
 
-formater = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
-stdoutHandler.setFormatter(formater)
+logFormatter = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
+stdoutHandler.setFormatter(logFormatter)
 
 logger.addHandler(stdoutHandler)
 
 # Read config file
-logging.info("Reading config file: /data/options.json")
+logger.info("Reading config file: /data/options.json")
 
 with open(path + "/data/options.json", mode="r") as data_file:
     config = json.load(data_file)
@@ -123,24 +125,24 @@ for button in config["buttons"]:
     timeout_guard[button["address"].lower()] = datetime.now()
     button_counter = button_counter + 1
     if ("address" not in button) or (not button["address"]) or (not re.match("[0-9a-f]{2}([-:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", button["address"].lower())):
-        logging.error("Parameter error for button " +
+        logger.error("Parameter error for button " +
                      str(button_counter) + ": [address] is not valid")
         error = True
 
     if ("name" not in button) or (not button["name"]) or (button["name"] == "null"):
-        logging.error("Parameter error for button " +
+        logger.error("Parameter error for button " +
                      str(button_counter) + ": [name] is null")
         error = True
 
     if not ("url" and "body" and "headers") in button and not ("domain" and "service" and "service_data") in button:
-        logging.error("Parameter error for button " + str(button_counter) + ": No config [url], [body], [headers] or [domain], [service], [service_data] provided")
+        logger.error("Parameter error for button " + str(button_counter) + ": No config [url], [body], [headers] or [domain], [service], [service_data] provided")
         error = True
 
     if ("url" and "body" and "headers") in button:
         for value in ("url", "body", "headers"):
             if (value not in button) or (not button[value]):
                 if value is "url":
-                    logging.error("Parameter error for button " + str(button_counter) + ": No [url] provided")
+                    logger.error("Parameter error for button " + str(button_counter) + ": No [url] provided")
                     error = True
                 button[value] = "{}"
 
@@ -148,29 +150,35 @@ for button in config["buttons"]:
         for value in ("domain", "service", "service_data"):
             if (value not in button) or (not button[value]):
                 if value is "domain" or "service":
-                    logging.error("Parameter error for button " +
+                    logger.error("Parameter error for button " +
                                   str(button_counter) + ": No [domain] or [service] provided")
                     error = True
                 button[value] = "{}"
 
 if error:
-    logging.info("Exiting...")
+    logger.info("Exiting...")
     sys.exit(0)
 
 
+logger.info("Starting...")
 while True:
+    # Start sniffing
+    logger.info("Starting sniffing...")
     try:
-        # Start sniffing
-        logging.info("Starting sniffing...")
-        try:
-            sniff(stop_filter=arp_display,
-                  filter="arp or (udp and src port 68 and dst port 67 and src host 0.0.0.0)",
-                  store=0,
-                  count=0)
-        except(OSError):
-            pass
+        sniff(stop_filter=arp_display,
+              filter="arp or (udp and src port 68 and dst port 67 and src host 0.0.0.0)",
+              store=0,
+              count=0)
+    except OSError as err:
+        logger.warning("OS error: {0}".format(err))
+        pass
+    except Exception as e:
+        logger.exception("Caught exception in sniff: %s" % e)
+        pass
+    except SystemExit:
+        raise
     except:
-        logging.exception("Unexpected exception")
+        logger.exception("Unexpected exception")
         raise
     finally:
-        logging.info("Exiting...")
+        logger.info("Finishing sniffing")
