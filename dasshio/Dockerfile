@@ -22,7 +22,7 @@ ARG BUILD_ARCH
 LABEL \
     io.hass.name="dasshio - Amazon Dash Buttons" \
     io.hass.description="Easy integration of Amazon Dash buttons with Home Assistant instance" \
-    io.hass.arch="${BUILD_ARCH}" \
+    io.hass.arch="armhf|aarch64|i386|amd64" \
     io.hass.type="addon" \
     io.hass.version=${BUILD_VERSION} \
     maintainer="Dani Manzaneque <danimanzaneque@gmail.com>" \
