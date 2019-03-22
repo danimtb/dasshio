@@ -8,8 +8,7 @@
   "boot": "auto",
   "host_network": true,
   "homeassistant_api": true,
-  "image": "danimtb/{arch}-dasshio",
-  "arch": ["armv7", "aarch64", "amd64", "i386"],
+  "image": "danimtb/amd64-dasshio",
   "options": {
     "timeout": 20,
     "buttons": [
