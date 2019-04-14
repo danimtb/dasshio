@@ -1,10 +1,14 @@
+linux: &linux
+   os: linux
+   dist: xenial
+   language: python
+   python: "3.7"
+
 sudo: required
 services:
   - docker
-before_install:
-  - sudo apt-get install jq
 env:
   - ADDON="dasshio"
 script:
-  - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - .travis/build.sh $ADDON
+  - docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+  - python .ci/build.py
