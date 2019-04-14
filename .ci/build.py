@@ -3,14 +3,15 @@ import os
 
 
 def run(cmd, message=None):
-    print("\n%s\n" % (cmd if not message else message)
+    msg = message or cmd
+    print("\n%s\n" % msg)
     ret = os.system(cmd)
     if ret != 0:
-        raise Exception("Error running: %s" % cmd)
+        raise Exception("Error running: %s" % msg)
 
 
 DOCKER_LOGIN = "docker login -u {docker_user} -p {docker_pass}"
-DOCKER_BUILD = "vocker run --rm --privileged -v ~/.docker:/root/.docker -v $(pwd)/{addon}:/data homeassistant/{arch}-builder -t /data --no-cache"
+DOCKER_BUILD = "docker run --rm --privileged -v ~/.docker:/root/.docker -v $(pwd)/{addon}:/data homeassistant/{arch}-builder -t /data --no-cache"
 
 addon = os.getenv("ADDON")
 docker_user = os.getenv("DOCKER_USER")
