@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from datetime import datetime, timedelta
 import json
 import logging
 import os
@@ -12,6 +11,7 @@ from scapy.all import IP
 from scapy.all import DHCP
 from scapy.all import Ether
 import sys
+import time
 import signal
 import re
 
@@ -122,7 +122,6 @@ error = False
 timeout_guard = {}
 
 for button in config["buttons"]:
-    timeout_guard[button["address"].lower()] = datetime.now()
     button_counter = button_counter + 1
     if ("address" not in button) or (not button["address"]) or (not re.match("[0-9a-f]{2}([-:])[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", button["address"].lower())):
         logger.error("Parameter error for button " +
