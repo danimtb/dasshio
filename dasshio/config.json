@@ -5,6 +5,10 @@
   "description": "Use Amazon Dash Buttons in Home Assistant",
   "url": "https://github.com/danimtb/dasshio",
   "startup": "services",
+  "arch": [
+    "amd64",
+    "armhf"
+  ],
   "boot": "auto",
   "host_network": true,
   "homeassistant_api": true,
