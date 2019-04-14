@@ -10,10 +10,6 @@ def run(cmd, message=None):
         raise Exception("Error running: %s" % msg)
 
 
-DOCKER_BUILD = "docker run --rm --privileged -v ~/.docker:/root/.docker -v $(pwd)/{addon}:/data homeassistant/{arch}-builder -t /data --no-cache"
-
 addon = os.getenv("ADDON")
-
-
-for arch in ["armhf", "amd64", "aarch64", "i386"]:
-    run(DOCKER_BUILD.format(addon=addon, arch=arch))
+docker_build = "docker run --rm --privileged -v ~/.docker:/root/.docker -v $(pwd)/{addon}:/data homeassistant/amd64-builder -t /data --no-cache"
+run(docker_build.format(addon=addon, arch=arch))
