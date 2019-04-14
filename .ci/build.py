@@ -12,4 +12,4 @@ def run(cmd, message=None):
 
 addon = os.getenv("ADDON")
 docker_build = "docker run --rm --privileged -v ~/.docker:/root/.docker -v $(pwd)/{addon}:/data homeassistant/amd64-builder -t /data --no-cache"
-run(docker_build.format(addon=addon, arch=arch))
+run(docker_build.format(addon=addon))
