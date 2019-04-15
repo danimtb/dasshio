@@ -31,7 +31,7 @@ def arp_display(pkt):
     mac = ""
     current_time = datetime.utcnow()
     button_timeout = int(config["timeout"]) if "timeout" in config else 10
-    request_timeout_secs = config["request_timeout_secs"] if "reuqest_timeout_secs" in config else 0.5
+    request_timeout_secs = int(config["request_timeout_secs"]) if "request_timeout_secs" in config else 2
 
     try:
         mac = pkt[ARP].hwsrc.lower()
