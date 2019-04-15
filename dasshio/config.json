@@ -1,6 +1,6 @@
 {
   "name": "Dasshio",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "slug": "dasshio",
   "description": "Use Amazon Dash Buttons in Home Assistant",
   "url": "https://github.com/danimtb/dasshio",
