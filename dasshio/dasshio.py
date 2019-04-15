@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import datetime
 import json
 import logging
 import os
@@ -10,6 +9,7 @@ import signal
 import sys
 import time
 
+from datetime import datetime
 from scapy.all import ARP
 from scapy.all import DHCP
 from scapy.all import Ether
