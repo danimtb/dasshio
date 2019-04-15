@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 
+import datetime
 import json
 import logging
 import os
+import re
 import requests
-from scapy.all import sniff
-from scapy.all import ARP
-from scapy.all import UDP
-from scapy.all import IP
-from scapy.all import DHCP
-from scapy.all import Ether
+import signal
 import sys
 import time
-import signal
-import re
+
+from scapy.all import ARP
+from scapy.all import DHCP
+from scapy.all import Ether
+from scapy.all import IP
+from scapy.all import UDP
+from scapy.all import sniff
 
 
 BASE_URL = os.environ.get("HA_BASE_URL") or "http://hassio/homeassistant"
