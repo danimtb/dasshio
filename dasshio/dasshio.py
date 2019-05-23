@@ -161,6 +161,8 @@ while True:
               filter="arp or (udp and src port 68 and dst port 67 and src host 0.0.0.0)",
               store=0,
               count=0)
+        
+        time.sleep(button_timeout)
     except OSError as err:
         logger.warning("OS error: {0}".format(err))
         pass
