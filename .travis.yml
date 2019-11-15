@@ -10,5 +10,4 @@ services:
 env:
   - ADDON="dasshio"
 script:
-  - docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
   - python .ci/build.py

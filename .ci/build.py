@@ -14,16 +14,14 @@ travis_commmit = os.getenv("TRAVIS_COMMIT")
 github_url = os.getenv("GITHUB_URL")
 addon = os.getenv("ADDON")
 
-docker_build = "docker run -it --rm --privileged --name {addon} " \
+docker_build = "docker run --rm --privileged " \
                "-v /var/run/docker.sock:/var/run/docker.sock " \
                "-v ~/.docker:/root/.docker " \
                "-v $(pwd):/docker " \
                "hassioaddons/build-env:latest " \
                "--target {addon} " \
-               "--from 'homeassistant/{{arch}}-base' " \
                "--login ${{DOCKER_USER}} " \
                "--password ${{DOCKER_PASS}} " \
-               "--author 'Daniel Manzaneque <danimanzaneque@gmail.com>' " \
                "--no-cache --all --tag-latest"
 if not travis_tag:
     docker_build = docker_build + " --push"
