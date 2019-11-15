@@ -30,8 +30,6 @@ def signal_handler(signal, frame):
 def arp_display(pkt):
     mac = ""
     current_time = datetime.utcnow()
-    button_timeout = int(config["timeout"]) if "timeout" in config else 10
-    request_timeout_secs = int(config["request_timeout_secs"]) if "request_timeout_secs" in config else 2
 
     try:
         mac = pkt[ARP].hwsrc.lower()
@@ -109,6 +107,8 @@ logger.info("Reading config file: /data/options.json")
 
 with open(path + "/data/options.json", mode="r") as data_file:
     config = json.load(data_file)
+timeout = int(config["timeout"]) if "timeout" in config else 10
+request_timeout_secs = int(config["request_timeout_secs"]) if "request_timeout_secs" in config else 2
 
 # Check config parameters
 button_counter = 0
@@ -174,3 +174,5 @@ while True:
         raise
     finally:
         logger.info("Finishing sniffing")
+    logging.info("Packet captured! Waiting %s seconds..." % str(timeout))
+    time.sleep(timeout)
