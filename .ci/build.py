@@ -20,9 +20,9 @@ docker_build = "docker run --rm --privileged --name {addon} " \
                "-v $(pwd):/docker " \
                "hassioaddons/build-env:latest " \
                "--login ${{DOCKER_USER}} " \
-               "--password {{DOCKER_PASS}} " \
+               "--password ${{DOCKER_PASS}} " \
                "--author 'Daniel Manzaneque <danimanzaneque@gmail.com>' " \
-               "--all --tag-latest"
+               "--no-cache --all --tag-latest"
 if not travis_tag:
     docker_build = docker_build + " --push"
 run(docker_build.format(addon=addon))
