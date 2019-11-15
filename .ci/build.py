@@ -14,17 +14,15 @@ travis_commmit = os.getenv("TRAVIS_COMMIT")
 github_url = os.getenv("GITHUB_URL")
 addon = os.getenv("ADDON")
 
-docker_build = "docker run -it --rm --privileged --name {addon} " \
+docker_build = "docker run --rm --privileged --name {addon} " \
+               "-v /var/run/docker.sock:/var/run/docker.sock " \
                "-v ~/.docker:/root/.docker " \
-               "-v $(pwd)/{addon}:/data " \
-               "homeassistant/build-env:latest " \
-               "--target {addon} " \
-               "--tag-latest " \
-               "--all -t /data --no-cache " \
+               "-v $(pwd):/docker " \
+               "hassioaddons/build-env:latest " \
+               "--login ${{DOCKER_USER}} " \
+               "--password {{DOCKER_PASS}} " \
                "--author 'Daniel Manzaneque <danimanzaneque@gmail.com>' " \
-               " --doc-url {github_url} " \
-               "--parallel " \
-               "--arg COMMIT {travis_commmit}"
+               "--all"
 if not travis_tag:
     docker_build = docker_build + " --test"
-run(docker_build.format(addon=addon, travis_commmit=travis_commmit, github_url=github_url))
+run(docker_build.format(addon=addon))
