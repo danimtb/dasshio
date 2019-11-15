@@ -20,7 +20,7 @@ docker_build = "docker run --rm --privileged " \
                "--target {addon} " \
                "--login ${{DOCKER_USER}} " \
                "--password ${{DOCKER_PASS}} " \
-               "--no-cache --all --tag-latest"
+               "--no-cache --all --tag-latest --cache-tag {travis_tag}"
 if travis_tag:
     docker_build = docker_build + " --push"
-run(docker_build.format(addon=addon))
+run(docker_build.format(addon=addon, travis_tag=travis_tag))
