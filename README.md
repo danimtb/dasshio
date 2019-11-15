@@ -139,6 +139,69 @@ At the moment, the best way to do this is to hold down the button for 6 seconds,
 
 Alternatively, you can access your Wifi Router and check the MAC addresses in the history of connected devices. Then, copy and paste the MAC in a service like [MA:CV:en:do:rs](https://macvendors.com/) to find the Vendor of that device. The Amazon Dash button vendor should be: *Amazon Technologies Inc.*
 
+## Manual installation (not as an addon)
+
+**Requirements:**
+To have installed Home Assistant following this guide: https://www.home-assistant.io/docs/installation/virtualenv/
+
+1. Create the folder /srv/homeassistant/dasshio to store the files:
+
+   ```bash
+   /srv/homeassistant/dasshiodasshio.py
+   /srv/homeassistant/dasshiodata/config.json
+   /srv/homeassistant/dasshiodata/options.json
+   ```
+
+2. In *options.json* define the url, headers, body and domain of your Home Assistant integration:
+
+   ```json
+   {
+     "server": "http://localhost:8123",
+     "timeout": 30,
+     "buttons": [
+     {
+       "name": "Duracell",
+       "address": "xx:xx:xx:xx:xx:xx",
+       "url": "http://localhost:8123/api/services/switch/toggle",
+       "headers": "{\"x-ha-access\": \"ha_password\"}",
+       "body": "{\"entity_id\":\"switch.socket_power\"}",
+       "domain": "switch"
+     }]
+   }
+   ```
+
+3. To run dasshio as a service, create the file: /lib/systemd/system/dasshio.service
+
+   ```init
+   [Unit]
+   Description=dasshio - Amazon Dash Buttons
+   After=network.target,home-assistant\@homeassistant.service
+   StartLimitIntervalSec=0
+   [Service]
+   Type=simple
+   Restart=always
+   RestartSec=1
+   User=root
+   ExecStart=/srv/homeassistant/bin/python3 /srv/homeassistant/dasshio/dasshio.py
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+4. Manually start/stop the service:
+
+   ```bash
+   sudo systemctl start dasshio
+   sudo systemctl status dasshio
+   sudo systemctl stop dasshio
+   ```
+
+5. Automatically start the service on boot
+
+   ```bash
+   sudo systemctl enable dasshio
+   ```
+
 ---------------------
 
 ### Credit
