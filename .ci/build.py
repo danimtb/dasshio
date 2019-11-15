@@ -10,8 +10,6 @@ def run(cmd, message=None):
         raise Exception("Error running: %s" % msg)
 
 travis_tag = os.getenv("TRAVIS_TAG")
-travis_commmit = os.getenv("TRAVIS_COMMIT")
-github_url = os.getenv("GITHUB_URL")
 addon = os.getenv("ADDON")
 
 docker_build = "docker run --rm --privileged " \
@@ -23,6 +21,6 @@ docker_build = "docker run --rm --privileged " \
                "--login ${{DOCKER_USER}} " \
                "--password ${{DOCKER_PASS}} " \
                "--no-cache --all --tag-latest"
-if not travis_tag:
+if travis_tag:
     docker_build = docker_build + " --push"
 run(docker_build.format(addon=addon))
