@@ -24,7 +24,7 @@ docker_build = "docker run -it --rm --privileged --name {addon} " \
                "--author 'Daniel Manzaneque <danimanzaneque@gmail.com>' " \
                " --doc-url {github_url} " \
                "--parallel " \
-               "--arg COMMIT {travis_commmit}'"
+               "--arg COMMIT {travis_commmit}"
 if not travis_tag:
     docker_build = docker_build + " --test"
 run(docker_build.format(addon=addon, travis_commmit=travis_commmit, github_url=github_url))
