@@ -19,6 +19,7 @@ docker_build = "docker run --rm --privileged --name {addon} " \
                "-v ~/.docker:/root/.docker " \
                "-v $(pwd):/docker " \
                "hassioaddons/build-env:latest " \
+               "--from 'homeassistant/{{arch}}-base' " \
                "--login ${{DOCKER_USER}} " \
                "--password ${{DOCKER_PASS}} " \
                "--author 'Daniel Manzaneque <danimanzaneque@gmail.com>' " \
