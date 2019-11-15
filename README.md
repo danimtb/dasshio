@@ -4,7 +4,7 @@
 
 ## Description: How dasshio works
 
-This is a python script used to scan Wi-Fi devices connected to your network (using ARP and UDP). If a device matches any MAC address of the options, it will perform a HTTP POST request to the Home Assistant API.
+This is a python script used to scan Wifi devices connected to your network (using ARP and UDP). If a device matches any MAC address of the options, it will perform a HTTP POST request to the Home Assistant API.
 
 ## Usage
 
@@ -28,6 +28,19 @@ Have a look at [Service calls](https://home-assistant.io/docs/scripts/service-ca
 ## How to install this Hass.io add-on
 
 To install this add-on, please, follow Home Assistant documentation on how to [Install Third-party Add-ons](https://home-assistant.io/hassio/installing_third_party_addons/)
+
+## How to connect your Dash button to your Wifi
+
+Amazon has annouced that Dash Buttons will be no longer supported after 2019. In some countries, the configuration of the buttons has been disabled from Amazon's app.
+
+However, there is an alternative method to connect the divice to your wifi network.
+
+1. Set the button into configuration mode by pressing the button for 6 seconds.
+2. Connect your laptop to the Wifi SSID that the button generates called `Amazon Configure me`.
+3. Open your favourite browser and navigate to the following URL `http://192.168.0.1` here you will see a table with the MAC of your device.
+   Copy the MAC address in order to indetify your device in the Dasshio configuration later.
+4. Navigate to the following URL: `http://192.168.0.1/?amzn_ssid=<SSID>&amzn_pw=<PASSWORD>` where `<SSID>` is the name of your Wifi network and `<PASSWORD>` is the password.
+4. Once you navigate to that URL, the button's `Amazon Configure me` Wifi will disappear and if `<SSID>` and `<PASSWORD>` were right, the button will connect yo the Wifi network once you press the button.
 
 ## Options example: domain, service, service_data
 
@@ -114,13 +127,17 @@ http:
     
 ## Options: timeout
 
-By default Dasshio waits 20 seconds after a button press before resuming, this is to avoid detecting duplicate button presses. This option allows you to change this delay, if you want more responsive buttons then decrease this value and increase it if you experience duplicate presses.
+By default Dasshio waits 10 seconds after a button press before resuming, this is to avoid detecting duplicate button presses. This option allows you to change this delay, if you want more responsive buttons then decrease this value and increase it if you experience duplicate presses.
+
+## Options: request_timeout_secs
+
+In case you suffer some latency in the HTTP requests, you can increase the `request_timeout_secs` (default to 2 seconds).
 
 ## How to find the MAC address of your Dash
 
-At the moment, the best way to do this is to hold down the button for 6 seconds, disconnect from the current Wi-Fi and connect to the *Amazon ConfigureMe* SSID.  If prompted, "stay connected" and open web page **192.168.0.1**. You will see your button’s ‘about’ page with the MAC and the additional information.
+At the moment, the best way to do this is to hold down the button for 6 seconds, disconnect from the current Wifi and connect to the *Amazon ConfigureMe* SSID.  If prompted, "stay connected" and open web page **192.168.0.1**. You will see your button’s ‘about’ page with the MAC and the additional information.
 
-Alternatively, you can access your Wi-Fi Router and check the MAC addresses in the history of connected devices. Then, copy and paste the MAC in a service like [MA:CV:en:do:rs](https://macvendors.com/) to find the Vendor of that device. The Amazon Dash button vendor should be: *Amazon Technologies Inc.*
+Alternatively, you can access your Wifi Router and check the MAC addresses in the history of connected devices. Then, copy and paste the MAC in a service like [MA:CV:en:do:rs](https://macvendors.com/) to find the Vendor of that device. The Amazon Dash button vendor should be: *Amazon Technologies Inc.*
 
 ---------------------
 
