@@ -20,8 +20,8 @@ Examples:
   - service_data: *{\\"entity_id\\": \\"light.room_light\\"}*
 - Set a Dash Button to activate a **welcome_home** script:
   - domain: *script*
-  - service: *welcome_home*
-  - service_data: *{}*
+  - service: *turn_on*
+  - service_data: *{\\"entity_id\\": \\"script.welcome_home\\"}*
 
 Have a look at [Service calls](https://home-assistant.io/docs/scripts/service-calls/) to know what services you can use and what you can do with them.
 
@@ -69,8 +69,8 @@ Here it is an example of a Dash Gillette button used to toggle a light and a Das
     "name": "Bounty",
     "address": "AC:63:BE:77:C4:0C",
     "domain": "script",
-    "service": "welcome_home",
-    "service_data": "{}"
+    "service": "turn_on",
+    "service_data": "{\"entity_id\": \"script.welcome_home\"}"
   }]
 }
 ```
