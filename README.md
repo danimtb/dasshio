@@ -40,7 +40,7 @@ However, there is an alternative method to connect the divice to your wifi netwo
 3. Open your favourite browser and navigate to the following URL `http://192.168.0.1` here you will see a table with the MAC of your device.
    Copy the MAC address in order to indetify your device in the Dasshio configuration later.
 4. Navigate to the following URL: `http://192.168.0.1/?amzn_ssid=<SSID>&amzn_pw=<PASSWORD>` where `<SSID>` is the name of your Wifi network and `<PASSWORD>` is the password.
-4. Once you navigate to that URL, the button's `Amazon Configure me` Wifi will disappear and if `<SSID>` and `<PASSWORD>` were right, the button will connect yo the Wifi network once you press the button.
+4. Once you navigate to that URL, the button's `Amazon Configure me` Wifi will disappear and if `<SSID>` and `<PASSWORD>` were right, the button will connect to the Wifi network once you press the button.
 
 ## Options example: domain, service, service_data
 
