@@ -8,36 +8,27 @@ import requests
 import signal
 import sys
 import time
-
-from datetime import datetime
-from scapy.all import ARP
-from scapy.all import DHCP
-from scapy.all import Ether
-from scapy.all import IP
-from scapy.all import UDP
-from scapy.all import sniff
-
+import datetime
+import socket
+import struct
+import binascii
+import json
 
 BASE_URL = os.environ.get("HA_BASE_URL") or "http://hassio/homeassistant"
-
 
 def signal_handler(signal, frame):
     logger.warning("Caught signal: %s" % signal)
     logger.info("Exiting...")
     sys.exit(0)
 
+def arp_display(mac):
+    if mac == "":
+        return
+    current_time = datetime.datetime.now(datetime.timezone.utc)
 
-def arp_display(pkt):
-    mac = ""
-    current_time = datetime.utcnow()
-
-    try:
-        mac = pkt[ARP].hwsrc.lower()
-    except:
-        mac = pkt[Ether].src.lower()
-
+    # logger.info(mac)
     for button in config["buttons"]:
-        button_address = button["address"].lower()
+        button_address = button["address"].lower().replace(":","")
         if mac == button_address:
             logger.info(button["name"] + " button pressed!")
 
@@ -76,16 +67,14 @@ def arp_display(pkt):
                 logger.exception(
                     "Unable to perform  request: Check [url], [body], [headers] and API password or\
                      [domain], [service] and [service_data] format.")
-
+            logging.info("Button pressed! Waiting %s seconds..." % str(timeout))
+            time.sleep(timeout)
+            logging.info("Listening again...")
             return True
-
 
 # Catch SIGINT/SIGTERM Signals
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
-
-# Remove Scapy IPv6 warnings
-logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 # Create basepath
 path = os.path.dirname(os.path.realpath(__file__))
@@ -103,7 +92,7 @@ stdoutHandler.setFormatter(logFormatter)
 logger.addHandler(stdoutHandler)
 
 # Read config file
-logger.info("Reading config file: /data/options.json")
+logger.info("Reading config file:" + path + "/data/options.json")
 
 with open(path + "/data/options.json", mode="r") as data_file:
     config = json.load(data_file)
@@ -151,16 +140,23 @@ if error:
     logger.info("Exiting...")
     sys.exit(0)
 
-
-logger.info("Starting...")
+rawSocket = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.htons(0x0003))
+logger.info("Starting sniffing...")
 while True:
-    # Start sniffing
-    logger.info("Starting sniffing...")
     try:
-        sniff(stop_filter=arp_display,
-              filter="arp or (udp and src port 68 and dst port 67 and src host 0.0.0.0)",
-              store=0,
-              count=0)
+        packet = rawSocket.recvfrom(2048)
+        ethernet_header = packet[0][0:14]
+        ethernet_detailed = struct.unpack("!6s6s2s", ethernet_header)
+        # skip non-ARP packets
+        ethertype = ethernet_detailed[2]
+        if ethertype != b'\x08\x06':
+            continue
+        arp_header = packet[0][14:42]
+        arp_detailed = struct.unpack("2s2s1s1s2s6s4s6s4s", arp_header)
+        source_mac = str(binascii.hexlify(arp_detailed[5]), 'utf-8')
+        source_ip = socket.inet_ntoa(arp_detailed[6])
+        dest_ip = socket.inet_ntoa(arp_detailed[8])
+        arp_display(source_mac)
     except OSError as err:
         logger.warning("OS error: {0}".format(err))
         pass
@@ -172,7 +168,3 @@ while True:
     except:
         logger.exception("Unexpected exception")
         raise
-    finally:
-        logger.info("Finishing sniffing")
-    logging.info("Packet captured! Waiting %s seconds..." % str(timeout))
-    time.sleep(timeout)
