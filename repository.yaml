@@ -1,0 +1,4 @@
+# https://developers.home-assistant.io/docs/add-ons/repository#repository-configuration
+name: dasshio Repository
+url: 'https://github.com/danimtb/dasshio'
+maintainer: danimtb <danimanzaneque@gmail.com>
